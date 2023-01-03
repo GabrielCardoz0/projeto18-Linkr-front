@@ -1,0 +1,1 @@
+export const logoFont = 'Passion One'

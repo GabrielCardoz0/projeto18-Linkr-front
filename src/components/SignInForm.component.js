@@ -28,7 +28,7 @@ export default function SignInForm() {
 
         e.preventDefault();
 
-        const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}signin`, form);
+        const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/signin`, form);
 
         setDisabled(true);
 
@@ -36,7 +36,7 @@ export default function SignInForm() {
             setToken(res.data);
             console.log(res.data)
             setDisabled(false);
-            //navigate("/timeline");
+            navigate("/timeline");
         });
 
         promise.catch((err) => {
@@ -46,11 +46,14 @@ export default function SignInForm() {
     }
 
     return(
-        <SignUpForm disabled={disabled}>
+        <SignUpForm>
                 <form onSubmit={signIn}>
                     <input name="email" placeholder="e-mail" type={"email"} value={form.email} onChange={handleForm}/>
                     <input name="password" placeholder="password" type={"password"} value={form.password} onChange={handleForm}/>
-                    <button className="submitButton" type={"submit"} disabled={disabled}>Log In</button>
+                    {
+                        disabled? (<button className="blockedButton" disabled >Log In</button>) :
+                        (<button className="submitButton" type={"submit"} disabled={disabled}>Log In</button>) 
+                    }
                 </form>
 
                 <RedirectTimeline>

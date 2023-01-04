@@ -30,7 +30,12 @@ const SignUpForm = styled.div`
         }
         .submitButton{
             background-color:#1877F2;
-            color: #fff;;
+            color: #fff;
+        }
+
+        .blockedButton{
+            background-color:#444444;
+            color: #fff;
         }
     }
     span, .redirect{

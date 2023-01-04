@@ -1,31 +1,52 @@
 import axios from "axios";
 import React from "react";
-import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import SignUpForm from "../assets/styles/SignUpForm.style";
 
-export default function SignUpFormComponent(params) {
+export default function SignUpFormComponent() {
+
   const [userEmail, setUserEmail] = React.useState();
   const [userPassword, setUserPassword] = React.useState();
   const [username, setUsername] = React.useState();
   const [userPictureUrl, setUserPictureUrl] = React.useState();
+  const [buttonOnOff, setButtonOnOff] = React.useState(true);
+  const navigate = useNavigate();
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  function submitFunction() {
+    
+    setButtonOnOff(false);
 
-    if (!userEmail || !userPassword || !username || !userPictureUrl) {
-      alert("Campos incompletos, ou preenchidos incorretamente!");
-    } else {
-      alert("tudo certo!");
-      const promise = axios.post("https://projeto18-linkr-back.onrender.com/signup");
-      console.log(promise);
-    }
-  }
+    const user = {
+      username: username,
+      email: userEmail,
+      password: userPassword,
+      pictureUrl: userPictureUrl,
+    };
+
+    axios.post(
+      "https://projeto18-linkr-back.onrender.com/signup",
+      user
+    )
+    .then(() => {
+      navigate("/");
+    })
+    .catch((err) => {
+      setButtonOnOff(true);
+
+      if (err.response.status === 409) alert(err.response.data);
+
+      if(err.response.status === 400) alert("dados preenchidos incorretamente");
+    });
+  };
 
   return (
     <SignUpForm>
+
       <div>
+
         <input
           placeholder="e-mail"
+          type={"email"}
           onChange={(e) => setUserEmail(e.target.value)}
         />
 
@@ -37,6 +58,7 @@ export default function SignUpFormComponent(params) {
 
         <input
           placeholder="name"
+          type={"text"}
           onChange={(e) => setUsername(e.target.value)}
         />
 
@@ -46,36 +68,17 @@ export default function SignUpFormComponent(params) {
           onChange={(e) => setUserPictureUrl(e.target.value)}
         />
 
-        <input
-          className="submitButton"
-          type={"submit"}
-          value="Sign Up"
-          onClick={e => handleSubmit(e)}
-        />
+        {buttonOnOff ? (
+          <input
+            className="submitButton" type={"submit"} value="Sign Up" onClick={submitFunction} />
+        ) : (
+          <input className="blockedButton" type={"submit"} value="Sign Up" />
+        )}
 
       </div>
 
-      <span>Switch back to log in</span>
+      <span onClick={() => navigate("/")}>Switch back to log in</span>
+
     </SignUpForm>
   );
 }
-
-// const SubmitButton = styled.button`
-//   width: 430px;
-//   height: 65px;
-//   max-width: 100%;
-//   border-radius: 6px;
-//   margin-bottom: 13px;
-//   font-size: 27px;
-//   font-family: "Oswald", sans-serif;
-//   font-weight: 700;
-//   border: none;
-//   background-color: #1877f2;
-//   color: #fff;
-
-//   @media (max-width: 800px) {
-//     width: 330px;
-//     height: 55px;
-//     font-size: 22px;
-//   }
-// `;

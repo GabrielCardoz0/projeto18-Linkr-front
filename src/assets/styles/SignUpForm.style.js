@@ -29,7 +29,13 @@ const SignUpForm = styled.div`
             color:#9f9f9f;
         }
         .submitButton{
-            
+            background-color:#1877F2;
+            color: #fff;
+        }
+
+        .blockedButton{
+            background-color:#444444;
+            color: #fff;
         }
     }
     span{
@@ -38,6 +44,7 @@ const SignUpForm = styled.div`
         font-weight:400;
         text-decoration:underline;
         font-family:'lato', sans-serif;
+        cursor:pointer;
     }
 
     @media (max-width: 800px) {

@@ -29,8 +29,7 @@ const SignUpForm = styled.div`
             color:#9f9f9f;
         }
         .submitButton{
-            background-color:#1877F2;
-            color: #fff;;
+            
         }
     }
     span{
@@ -44,6 +43,13 @@ const SignUpForm = styled.div`
     @media (max-width: 800px) {
         width:100%;
         height:74vh;
+        div{
+            input{
+                width:330px;
+                height:55px;
+                font-size:22px;
+            }
+        }
     }
 `;
 

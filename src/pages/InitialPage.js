@@ -1,7 +1,7 @@
 export default function InitialPage() {
     return(
         <>
-        <h1>Oi</h1>
+        <div>Oi</div>
         </>
     )
 }

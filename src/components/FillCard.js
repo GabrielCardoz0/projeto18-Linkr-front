@@ -96,6 +96,18 @@ const CardContainer = styled.div`
         height: 50px;
         border-radius: 26.5px;
     }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        height: 164px;
+        border-radius: 0px;
+        justify-content: center;
+
+        & img {
+            width: 0px;
+            height: 0px;
+        }
+    }
 `
 const AlignBox = styled.div`
     display: flex;
@@ -110,6 +122,16 @@ const AlignBox = styled.div`
     font-size: 20px;
     line-height: 24px;
     color: ${fillCardTitleColor};
+
+    @media (max-width: 800px) {
+        width: 100%;
+        text-align: center;
+      & h2{
+            width: 100%;
+            font-size: 17px;
+            line-height: 20px;
+        }
+    }    
     }
 `
 const InputUrl = styled.input`
@@ -131,6 +153,12 @@ const InputUrl = styled.input`
     ::placeholder{
         color: ${placeholderColor};
     }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        font-size: 13px;
+        line-height: 16px;
+    } 
 `
 const InputCaption = styled.textarea`
     border: none;
@@ -151,6 +179,13 @@ const InputCaption = styled.textarea`
         color: ${placeholderColor};
         height: 50px;
     }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        height: 47px;
+        font-size: 13px;
+        line-height: 16px;
+    } 
 `
 const PublishButton = styled.button`
     width: 112px;
@@ -165,4 +200,8 @@ const PublishButton = styled.button`
     background-color: ${publishButtonColor};
     border: none;
     border-radius: 5px;
+
+    @media (max-width: 800px) {
+        height: 22px;
+    } 
 `

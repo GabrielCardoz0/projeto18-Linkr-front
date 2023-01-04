@@ -6,8 +6,10 @@ import { useState } from 'react'
 import axios from "axios"
 import swal from "sweetalert"
 import { URL, API_URL } from "../constants/urls"
+import { useAuth } from "../providers/auth"
 
 export default function FillCard() {
+    const { token, userimage } = useAuth();
     const [form, setForm] = useState({
 		url: '',
 		caption: ''
@@ -24,9 +26,13 @@ export default function FillCard() {
 	}
 
     function sendPost() {
-		const URLpost = URL + 'posts';
+		const URLpost = API_URL + 'timeline';
 		console.log(form);
-		const promise = axios.post(URLpost, form);
+		const promise = axios.post(URLpost, form,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+            );
 
 		setLoad(true);
 
@@ -46,7 +52,7 @@ export default function FillCard() {
     return(
         <>
         <CardContainer>
-            <img src={linkr}></img>
+            <img src={userimage}></img>
             <AlignBox>
                 <h2>What are you going to share today?</h2>
                 <InputUrl

@@ -38,7 +38,7 @@ const SignUpForm = styled.div`
             color: #fff;
         }
     }
-    span, .redirect{
+    span{
         color: #fff;
         font-size:20px;
         font-weight:400;

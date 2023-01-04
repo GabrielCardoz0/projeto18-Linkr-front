@@ -77,7 +77,7 @@ export default function SignUpFormComponent() {
 
       </div>
 
-      <span onClick={() => navigate("/")}>Switch back to log in</span>
+      <span onClick={() => navigate("/sign-in")}>Switch back to log in</span>
 
     </SignUpForm>
   );

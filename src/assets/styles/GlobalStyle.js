@@ -58,6 +58,10 @@ a:visited{
 *{
 	box-sizing:border-box;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
+
 `;
 
 export default GlobalStyle;

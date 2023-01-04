@@ -10,7 +10,7 @@ export default function SignUpPage() {
     );
 };
 
-const SignUp = styled.div`
+export const SignUp = styled.div`
     display:flex;
     justify-content:center;
     align-items:center;

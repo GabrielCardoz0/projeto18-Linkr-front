@@ -17,7 +17,8 @@ const LeftSideLogo = styled.div`
         margin-bottom:15px;
     }
     span{
-        font-size:33px;
+        font-size:43px;
+        font-family:'Oswald', sans-serif;
         font-weight:700;
         color: #fff;
         max-width:442px;

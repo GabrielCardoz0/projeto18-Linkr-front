@@ -23,6 +23,8 @@ const SignUpForm = styled.div`
             box-sizing:border-box;
             margin-bottom:13px;
             font-size:27px;
+            font-family:'Oswald', sans-serif;
+            font-weight:700;
             border:none;
             color:#9f9f9f;
         }
@@ -36,6 +38,7 @@ const SignUpForm = styled.div`
         font-size:20px;
         font-weight:400;
         text-decoration:underline;
+        font-family:'lato', sans-serif;
     }
 
     @media (max-width: 800px) {

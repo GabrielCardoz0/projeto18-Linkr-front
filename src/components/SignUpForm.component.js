@@ -5,9 +5,9 @@ export default function SignUpFormComponent(params) {
     return(
         <SignUpForm>
                 <div>
-                    <input placeholder="name"/>
-                    <input placeholder="email"/>
+                    <input placeholder="e-mail"/>
                     <input placeholder="password" type={"password"}/>
+                    <input placeholder="name"/>
                     <input placeholder="picture url" type={"url"}/>
                     <input className="submitButton" type={"submit"} value="Sign Up"/>
                 </div>

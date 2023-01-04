@@ -4,11 +4,7 @@ import { createContext } from 'react';
 export const AuthContext = createContext({});
 
 export const AuthProvider = (props) => {
-	const [token, setToken] = useState(
-		localStorage.getItem('token')
-			? JSON.parse(localStorage.getItem('token'))
-			: ''
-	);
+	const [token, setToken] = useState('');
 
 	return (
 		<AuthContext.Provider

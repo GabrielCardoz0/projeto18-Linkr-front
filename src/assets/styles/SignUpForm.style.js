@@ -8,12 +8,12 @@ const SignUpForm = styled.div`
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    div{
+    div, form{
         display:flex;
         flex-direction:column;
         justify-content:center;
         max-width:80%;
-        input{
+        input, button{
             width:430px;
             height:65px;
             max-width:100%;
@@ -33,7 +33,7 @@ const SignUpForm = styled.div`
             color: #fff;;
         }
     }
-    span{
+    span, .redirect{
         color: #fff;
         font-size:20px;
         font-weight:400;

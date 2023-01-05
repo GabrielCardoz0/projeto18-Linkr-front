@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import FillCard from "../components/FillCard"
+import PublishedCards from "../components/PublishedCards"
 import { titleFont } from "../constants/fonts"
 
 export default function TimelinePage() {
@@ -9,6 +10,7 @@ export default function TimelinePage() {
         <TimelineContainer>
         <Title>timeline</Title>
         <FillCard/>
+        <PublishedCards/>
         </TimelineContainer>
         
         </>
@@ -20,6 +22,7 @@ const TimelineContainer = styled.div`
     width: 100%;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 30px;
 `
 
 const Title = styled.div`

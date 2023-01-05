@@ -38,12 +38,12 @@ console.log(cards);
         {cards.map((card) => {
      return(    <CardContainer>
             <UserInfo>
-                <img src={profile} alt="profile"></img>
+                <img src={card.pictureUrl} alt="profile"></img>
                 <ion-icon name="heart-outline"></ion-icon>
             </UserInfo>
 
             <UrlInfo>
-                <h2>{card.userId}</h2>
+                <h2>{card.username}</h2>
                 <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>>  
                 <h3>{card.caption}</h3>
                 </ReactTagify>

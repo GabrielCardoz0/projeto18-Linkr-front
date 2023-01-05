@@ -57,7 +57,7 @@ console.log(cards);
                 </h5>
                 <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
                 </div>
-                <img src={profile} alt="link"></img>
+                <img src={card.image} alt="link"></img>
                 </MetaData>
             </UrlInfo>
 

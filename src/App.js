@@ -3,6 +3,8 @@ import GlobalStyle from './assets/styles/GlobalStyle';
 import InitialPage from './pages/InitialPage';
 import SignInPage from './pages/signInPage';
 import SignUpPage from './pages/signUpPage';
+import TimelinePage from './pages/TimelinePage';
+
 
 function App() {
 	return (
@@ -10,6 +12,7 @@ function App() {
 			<GlobalStyle />
 			<BrowserRouter>
 				<Routes>
+					<Route path='/timeline' element={<TimelinePage />} />
 					<Route path="/initial-page" element={<InitialPage />} />
 					<Route path='/sign-up' element={ <SignUpPage/> }/>
 					<Route path='/' element={<SignInPage/>} /> 

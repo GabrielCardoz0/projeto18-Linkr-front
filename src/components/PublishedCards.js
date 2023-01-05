@@ -1,10 +1,36 @@
 import styled from "styled-components";
 import profile from "../assets/images/image 4.png"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { API_URL } from "../constants/urls";
 
 
 
 export default function PublishedCards(){
 
+    const [cards, setCards] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+
+
+    useEffect(() => {
+        setLoading(true);
+        axios.get(`${API_URL}/timeline`)
+        .then((res) => {
+            setCards(res.data);
+            setLoading(false);
+            console.log(res.data);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }, []);
+console.log(cards);
+    if(loading){
+        return(
+            <h1>Loading...</h1>
+        )
+    }
 
     return(
         <>
@@ -27,7 +53,7 @@ export default function PublishedCards(){
                 </h5>
                 <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
                 </div>
-                <img src={profile}></img>
+                <img src={profile} alt="link"></img>
                 </MetaData>
             </UrlInfo>
 

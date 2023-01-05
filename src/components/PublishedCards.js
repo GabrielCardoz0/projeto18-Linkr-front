@@ -3,6 +3,7 @@ import profile from "../assets/images/image 4.png"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/urls";
+import { ReactTagify } from "react-tagify";
 
 
 
@@ -34,19 +35,22 @@ console.log(cards);
 
     return(
         <>
-        <CardContainer>
+        {cards.map((card) => {
+     return(    <CardContainer>
             <UserInfo>
                 <img src={profile} alt="profile"></img>
                 <ion-icon name="heart-outline"></ion-icon>
             </UserInfo>
 
             <UrlInfo>
-                <h2>Juvenal Juvêncio</h2>
-                <h3>Muito maneiro esse tutorial de Material UI com React, deem uma olhada! #react #material</h3>
+                <h2>{card.userId}</h2>
+                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>>  
+                <h3>{card.caption}</h3>
+                </ReactTagify>
                 <MetaData>
                 <div>
                 <h3>
-                Como aplicar o Material UI em um projeto React
+                {card.title}
                 </h3>
                 <h5>
                 Hey! I have moved this tutorial to my personal blog. Same content, new location. Sorry about making you click through to another page.
@@ -57,7 +61,8 @@ console.log(cards);
                 </MetaData>
             </UrlInfo>
 
-        </CardContainer>    
+        </CardContainer>    )
+        })}
         </>
     );
 }

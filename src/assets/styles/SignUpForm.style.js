@@ -44,11 +44,19 @@ const SignUpForm = styled.div`
         font-weight:400;
         text-decoration:underline;
         font-family:'lato', sans-serif;
+        cursor:pointer;
     }
 
     @media (max-width: 800px) {
         width:100%;
         height:74vh;
+        div{
+            input{
+                width:330px;
+                height:55px;
+                font-size:22px;
+            }
+        }
     }
 `;
 

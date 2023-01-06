@@ -14,14 +14,14 @@ export default function FillCard() {
 	});
 	const [load, setLoad] = useState(false);
 
-    function fillForm(e) {
-		if (!load) {
-			const { name, value } = e.target;
-			const formContent = { ...form, [name]: value };
-			setForm(formContent);
-			console.log(formContent)
-		}
-	}
+  function fillForm(e) {
+    if (!load) {
+      const { name, value } = e.target;
+      const formContent = { ...form, [name]: value };
+      setForm(formContent);
+      console.log(formContent);
+    }
+  }
 
     function sendPost() {
 		const URLpost = process.env.REACT_APP_API_BASE_URL + '/timeline';
@@ -32,20 +32,20 @@ export default function FillCard() {
             }
             );
 
-		setLoad(true);
+    setLoad(true);
 
-		promise.then((res) => {
-			setLoad(false);
-            window.location.reload(false);
-		});
+    promise.then((res) => {
+      setLoad(false);
+      window.location.reload(false);
+    });
 
-		promise.catch((err) => {
-			swal({
-				title: "Houve um erro ao publicar seu link",
-			});
-			setLoad(false);
-		});
-	} 
+    promise.catch((err) => {
+      swal({
+        title: "Houve um erro ao publicar seu link",
+      });
+      setLoad(false);
+    });
+  }
 
     return(
         <>
@@ -114,11 +114,11 @@ const CardContainer = styled.div`
     }
 `
 const AlignBox = styled.div`
-    display: flex;
-    width: 503px;
-    flex-direction: column;
-    align-items: flex-end;
-    & h2 {
+  display: flex;
+  width: 503px;
+  flex-direction: column;
+  align-items: flex-end;
+  & h2 {
     font-family: ${baseFont};
     font-style: normal;
     width: 503px;
@@ -139,20 +139,20 @@ const AlignBox = styled.div`
     }
 `
 const InputUrl = styled.input`
-    border: none;
-    box-sizing: border-box;
-    width: 503px;
-    height: 30px;
-    font-family: ${baseFont};
-    background-color: ${inputPost};
-    border-radius: 5px;
-    padding: 5px;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 15px;
-    line-height: 18px;
-    margin-bottom: 5px;
-    margin-top: 13px;
+  border: none;
+  box-sizing: border-box;
+  width: 503px;
+  height: 30px;
+  font-family: ${baseFont};
+  background-color: ${inputPost};
+  border-radius: 5px;
+  padding: 5px;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+  margin-bottom: 5px;
+  margin-top: 13px;
 
     ::placeholder{
         color: ${placeholderColor};
@@ -165,19 +165,19 @@ const InputUrl = styled.input`
     } 
 `
 const InputCaption = styled.textarea`
-    border: none;
-    box-sizing: border-box;
-    width: 502px;
-    height: 66px;
-    font-family: ${baseFont};
-    background-color: ${inputPost};
-    border-radius: 5px;
-    padding: 5px;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 15px;
-    line-height: 18px;
-    margin-bottom: 5px;
+  border: none;
+  box-sizing: border-box;
+  width: 502px;
+  height: 66px;
+  font-family: ${baseFont};
+  background-color: ${inputPost};
+  border-radius: 5px;
+  padding: 5px;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+  margin-bottom: 5px;
 
     ::placeholder{
         color: ${placeholderColor};

@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import profile from "../assets/images/image 4.png"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/urls";
 import { ReactTagify } from "react-tagify";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -11,6 +11,7 @@ export default function PublishedCards(){
 
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
 
 
@@ -38,26 +39,31 @@ console.log(cards);
         {cards.map((card) => {
      return(    <CardContainer>
             <UserInfo>
-                <img src={profile} alt="profile"></img>
+                <img src={card.pictureUrl} alt="profile"></img>
                 <ion-icon name="heart-outline"></ion-icon>
             </UserInfo>
 
             <UrlInfo>
-                <h2>{card.userId}</h2>
-                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>>  
+                <h2>{card.username}</h2>
+                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> navigate(`/hashtag/:${tag.slice(1,tag.length -1)}`)}>
                 <h3>{card.caption}</h3>
                 </ReactTagify>
                 <MetaData>
+               <a href={card.url} target="_blank" rel="noreferrer" >
                 <div>
                 <h3>
                 {card.title}
                 </h3>
                 <h5>
-                Hey! I have moved this tutorial to my personal blog. Same content, new location. Sorry about making you click through to another page.
+                {card.description}
                 </h5>
-                <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
+                <h4>
+                {card.url}
+                </h4>
                 </div>
+                </a>
                 <img src={card.image} alt="link"></img>
+            
                 </MetaData>
             </UrlInfo>
 
@@ -168,11 +174,12 @@ const MetaData = styled.div`
             color: #cecece;
 
         }
-        & img{
+        & a{
+            img{
             width: 30%;
             height: 100%;
             border-radius: 11px;
-
+            }
         }
     }
 

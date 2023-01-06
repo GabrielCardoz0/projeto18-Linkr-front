@@ -20,13 +20,11 @@ export default function PublishedCards(){
         .then((res) => {
             setCards(res.data);
             setLoading(false);
-            console.log(res.data);
         })
         .catch((err) => {
             console.log(err);
         })
     }, []);
-console.log(cards);
     if(loading){
         return(
             <h1>Loading...</h1>

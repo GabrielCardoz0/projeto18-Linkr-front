@@ -1,24 +1,21 @@
 import styled from "styled-components"
-import FillCard from "../components/FillCard"
 import PublishedCards from "../components/PublishedCards"
 import { titleFont } from "../constants/fonts"
-import Navbar from "../components/Navbar"
 
-export default function TimelinePage() {
+export default function HashtagPage() {
     return(
-        <>
-        <Navbar/>
-        <TimelineContainer>
-        <Title>timeline</Title>
-        <FillCard/>
-        <PublishedCards/>
-        </TimelineContainer>
+    
+     <>
+        <TrendingContainer>
+            <Title>#javascript</Title>
+            <PublishedCards/>
+        </TrendingContainer>
+     </>      
         
-        </>
     )
 }
 
-const TimelineContainer = styled.div`
+const TrendingContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;

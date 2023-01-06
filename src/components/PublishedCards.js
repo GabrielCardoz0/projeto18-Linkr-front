@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/urls";
 import { ReactTagify } from "react-tagify";
-import { BsTrash, BsFillPencilFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
 
 export default function PublishedCards() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -16,11 +18,13 @@ export default function PublishedCards() {
       .then((res) => {
         setCards(res.data);
         setLoading(false);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+  console.log(cards);
   if (loading) {
     return <h1>Loading...</h1>;
   }
@@ -28,8 +32,7 @@ export default function PublishedCards() {
   return (
     <>
       {cards.map((card) => {
-        console.log(card);
-        if (localStorage.get("userId") === card.userId) {
+        if (localStorage.getItem("userId") === cards.userId) {
           return (
             <CardContainer>
               <UserInfo>
@@ -41,28 +44,28 @@ export default function PublishedCards() {
                 <CardHeader>
                   <h2>{card.username}</h2>
                   <ul>
-                    <BsTrash />
+                    <BsTrashFill />
                     <BsFillPencilFill />
                   </ul>
                 </CardHeader>
 
                 <ReactTagify
                   colors={"#FFFFFF"}
-                  tagClicked={(tag) => alert(tag)}
+                  tagClicked={(tag) =>
+                    navigate(`/hashtag/:${tag.slice(1, tag.length - 1)}`)
+                  }
                 >
                   <h3>{card.caption}</h3>
                 </ReactTagify>
 
                 <MetaData>
-                  <div>
-                    <h3>{card.title}</h3>
-                    <h5>
-                      Hey! I have moved this tutorial to my personal blog. Same
-                      content, new location. Sorry about making you click
-                      through to another page.
-                    </h5>
-                    <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
-                  </div>
+                  <a href={card.url} target="_blank" rel="noreferrer">
+                    <div>
+                      <h3>{card.title}</h3>
+                      <h5>{card.description}</h5>
+                      <h4>{card.url}</h4>
+                    </div>
+                  </a>
                   <img src={card.image} alt="link"></img>
                 </MetaData>
               </UrlInfo>
@@ -77,27 +80,24 @@ export default function PublishedCards() {
               </UserInfo>
 
               <UrlInfo>
-                <CardHeader>
-                  <h2>{card.username}</h2>
-                </CardHeader>
-
+                <h2>{card.username}</h2>
                 <ReactTagify
                   colors={"#FFFFFF"}
-                  tagClicked={(tag) => alert(tag)}
+                  tagClicked={(tag) =>
+                    navigate(`/hashtag/:${tag.slice(1, tag.length - 1)}`)
+                  }
                 >
                   <h3>{card.caption}</h3>
                 </ReactTagify>
 
                 <MetaData>
-                  <div>
-                    <h3>{card.title}</h3>
-                    <h5>
-                      Hey! I have moved this tutorial to my personal blog. Same
-                      content, new location. Sorry about making you click
-                      through to another page.
-                    </h5>
-                    <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
-                  </div>
+                  <a href={card.url} target="_blank" rel="noreferrer">
+                    <div>
+                      <h3>{card.title}</h3>
+                      <h5>{card.description}</h5>
+                      <h4>{card.url}</h4>
+                    </div>
+                  </a>
                   <img src={card.image} alt="link"></img>
                 </MetaData>
               </UrlInfo>
@@ -200,10 +200,12 @@ const MetaData = styled.div`
       line-height: 13px;
       color: #cecece;
     }
-    & img {
-      width: 30%;
-      height: 100%;
-      border-radius: 11px;
+    & a {
+      img {
+        width: 30%;
+        height: 100%;
+        border-radius: 11px;
+      }
     }
   }
 `;

@@ -17,6 +17,7 @@ function App() {
 					<Route path="/initial-page" element={<InitialPage />} />
 					<Route path='/sign-up' element={ <SignUpPage/> }/>
 					<Route path='/' element={<SignInPage/>} /> 
+					<Route path='/timeline' element={<TimelinePage/>} /> 
 					<Route path='/hashtag/:hashtag' element={<HashtagPage/>} />
 				</Routes>
 			</BrowserRouter>

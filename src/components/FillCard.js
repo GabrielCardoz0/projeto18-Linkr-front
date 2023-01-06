@@ -1,12 +1,9 @@
 import styled from "styled-components"
-import linkr from "../assets/images/image 4.png"
 import { fillCardTitleColor, inputPost, placeholderColor, publishButtonColor } from "../constants/colors"
 import { baseFont } from "../constants/fonts"
 import { useState } from 'react'
 import axios from "axios"
 import swal from "sweetalert"
-import { URL, API_URL } from "../constants/urls"
-import { useAuth } from "../providers/auth"
 
 export default function FillCard() {
     const { token, userimage } = useAuth();
@@ -26,7 +23,7 @@ export default function FillCard() {
 	}
 
     function sendPost() {
-		const URLpost = API_URL + 'timeline';
+		const URLpost = process.env.REACT_APP_API_BASE_URL + '/timeline';
 		console.log(form);
 		const promise = axios.post(URLpost, form,
             {
@@ -52,7 +49,7 @@ export default function FillCard() {
     return(
         <>
         <CardContainer>
-            <img src={userimage}></img>
+            <img src={userimage} alt="user"></img>
             <AlignBox>
                 <h2>What are you going to share today?</h2>
                 <InputUrl

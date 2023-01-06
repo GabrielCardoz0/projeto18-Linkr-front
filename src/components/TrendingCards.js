@@ -1,81 +1,45 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { API_URL } from "../constants/urls";
-import { ReactTagify } from "react-tagify";
-import { useNavigate } from "react-router-dom";
 
 
+export default function TrendingCards() {
 
-export default function PublishedCards(){
-
-    const [cards, setCards] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-
-
-
-    useEffect(() => {
-        setLoading(true);
-        axios.get(`${API_URL}/timeline`)
-        .then((res) => {
-            setCards(res.data);
-            setLoading(false);
-            console.log(res.data);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    }, []);
-console.log(cards);
-    if(loading){
-        return(
-            <h1>Loading...</h1>
-        )
-    }
 
     return(
         <>
-        {cards.map((card) => {
-     return(    <CardContainer>
+       <CardContainer>
             <UserInfo>
                 <img src={card.pictureUrl} alt="profile"></img>
                 <ion-icon name="heart-outline"></ion-icon>
             </UserInfo>
 
             <UrlInfo>
-<<<<<<< HEAD
-                <h2>{card.userId}</h2>
-                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>  
-=======
                 <h2>{card.username}</h2>
                 <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> navigate(`/hashtag/:${tag.slice(1,tag.length -1)}`)}>
->>>>>>> 86898212b714041808dad36876792f07184c19da
                 <h3>{card.caption}</h3>
                 </ReactTagify>
                 <MetaData>
-               <a href={card.url} target="_blank" rel="noreferrer" >
+
                 <div>
+              
                 <h3>
                 {card.title}
                 </h3>
+                
                 <h5>
                 {card.description}
                 </h5>
-                <h4>
-                {card.url}
-                </h4>
-                </div>
-                </a>
-                <img src={card.image} alt="link"></img>
+            <h4>{card.url}</h4>
             
+               
+                </div>
+                
+               
                 </MetaData>
             </UrlInfo>
 
-        </CardContainer>    )
-        })}
+        </CardContainer>
         </>
-    );
+    )
 }
 
 const CardContainer = styled.div`
@@ -147,7 +111,7 @@ const MetaData = styled.div`
     margin-top: 18px;
     display: flex;
 
-    & div{
+    &   div{
         width: 70%;
         height: 100%;
         display: flex;
@@ -179,13 +143,13 @@ const MetaData = styled.div`
             color: #cecece;
 
         }
-        & a{
-            img{
+        & img{
             width: 30%;
             height: 100%;
             border-radius: 11px;
-            }
+
         }
     }
+    
 
 `

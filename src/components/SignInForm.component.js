@@ -33,8 +33,9 @@ export default function SignInForm() {
         setDisabled(true);
 
         promise.then((res) => {
-            setToken(res.data);
-            console.log(res.data)
+            setToken(res.data.token);
+            console.log(res.data.token);
+            localStorage.setItem('userId' , res.data.userId);
             setDisabled(false);
             navigate("/timeline");
         });

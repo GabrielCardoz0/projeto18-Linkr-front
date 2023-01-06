@@ -5,13 +5,13 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = (props) => {
 	const [token, setToken] = useState(
-		localStorage.getItem('linkrtoken')
-			? JSON.parse(localStorage.getItem('linkrtoken'))
-			: '09e94db4-65ac-4d04-aa98-11f9d51dbe9c'
+		localStorage.getItem('token')
+			? JSON.parse(localStorage.getItem('token'))
+			: ''
 	);
 	const [userimage, setUserimage] = useState(
-		localStorage.getItem('linkruserimage')
-			? JSON.parse(localStorage.getItem('linkruserimage'))
+		localStorage.getItem('userimage')
+			? JSON.parse(localStorage.getItem('userimage'))
 			: 'https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg'
 	);
 

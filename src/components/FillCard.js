@@ -19,13 +19,11 @@ export default function FillCard() {
       const { name, value } = e.target;
       const formContent = { ...form, [name]: value };
       setForm(formContent);
-      console.log(formContent);
     }
   }
 
     function sendPost() {
 		const URLpost = process.env.REACT_APP_API_BASE_URL + '/timeline';
-		console.log(form);
 		const promise = axios.post(URLpost, form,
             {
                 headers: { Authorization: `Bearer ${token}` },

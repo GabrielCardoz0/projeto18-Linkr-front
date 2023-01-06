@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../constants/urls";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
@@ -14,11 +13,11 @@ export default function PublishedCards() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${API_URL}/timeline`)
+      .get(`${process.env.REACT_APP_API_BASE_URL}/timeline`)
       .then((res) => {
         setCards(res.data);
         setLoading(false);
-        console.log(res.data);
+        
       })
       .catch((err) => {
         console.log(err);

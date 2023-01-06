@@ -44,20 +44,22 @@ console.log(cards);
 
             <UrlInfo>
                 <h2>{card.username}</h2>
-                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>>  
+                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>
                 <h3>{card.caption}</h3>
                 </ReactTagify>
                 <MetaData>
+                <a href={card.url} target="_blank">
                 <div>
                 <h3>
                 {card.title}
                 </h3>
                 <h5>
-                Hey! I have moved this tutorial to my personal blog. Same content, new location. Sorry about making you click through to another page.
+                {card.description}
                 </h5>
-                <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
+            <h4>{card.url}</h4>
                 </div>
                 <img src={card.image} alt="link"></img>
+                </a>
                 </MetaData>
             </UrlInfo>
 

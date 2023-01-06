@@ -29,41 +29,81 @@ export default function PublishedCards() {
     <>
       {cards.map((card) => {
         console.log(card);
-        return (
-          <CardContainer>
-            <UserInfo>
-              <img src={card.pictureUrl} alt="profile"></img>
-              <ion-icon name="heart-outline"></ion-icon>
-            </UserInfo>
+        if (localStorage.get("userId") === card.userId) {
+          return (
+            <CardContainer>
+              <UserInfo>
+                <img src={card.pictureUrl} alt="profile"></img>
+                <ion-icon name="heart-outline"></ion-icon>
+              </UserInfo>
 
-            <UrlInfo>
-              <CardHeader>
-                <h2>{card.username}</h2>
-                <ul>
-                  <BsTrash />
-                  <BsFillPencilFill />
-                </ul>
-              </CardHeader>
+              <UrlInfo>
+                <CardHeader>
+                  <h2>{card.username}</h2>
+                  <ul>
+                    <BsTrash />
+                    <BsFillPencilFill />
+                  </ul>
+                </CardHeader>
 
-              <ReactTagify colors={"#FFFFFF"} tagClicked={(tag) => alert(tag)}>
-                <h3>{card.caption}</h3>
-              </ReactTagify>
+                <ReactTagify
+                  colors={"#FFFFFF"}
+                  tagClicked={(tag) => alert(tag)}
+                >
+                  <h3>{card.caption}</h3>
+                </ReactTagify>
 
-              <MetaData>
-                <div>
-                  <h3>{card.title}</h3>
-                  <h5>
-                    Hey! I have moved this tutorial to my personal blog. Same
-                    content, new location. Sorry about making you click through
-                    to another page.
-                  </h5>
-                  <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
-                </div>
-                <img src={card.image} alt="link"></img>
-              </MetaData>
-            </UrlInfo>
-          </CardContainer>
-        );
+                <MetaData>
+                  <div>
+                    <h3>{card.title}</h3>
+                    <h5>
+                      Hey! I have moved this tutorial to my personal blog. Same
+                      content, new location. Sorry about making you click
+                      through to another page.
+                    </h5>
+                    <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
+                  </div>
+                  <img src={card.image} alt="link"></img>
+                </MetaData>
+              </UrlInfo>
+            </CardContainer>
+          );
+        } else {
+          return (
+            <CardContainer>
+              <UserInfo>
+                <img src={card.pictureUrl} alt="profile"></img>
+                <ion-icon name="heart-outline"></ion-icon>
+              </UserInfo>
+
+              <UrlInfo>
+                <CardHeader>
+                  <h2>{card.username}</h2>
+                </CardHeader>
+
+                <ReactTagify
+                  colors={"#FFFFFF"}
+                  tagClicked={(tag) => alert(tag)}
+                >
+                  <h3>{card.caption}</h3>
+                </ReactTagify>
+
+                <MetaData>
+                  <div>
+                    <h3>{card.title}</h3>
+                    <h5>
+                      Hey! I have moved this tutorial to my personal blog. Same
+                      content, new location. Sorry about making you click
+                      through to another page.
+                    </h5>
+                    <h4>https://medium.com/@pshrmn/a-simple-react-router</h4>
+                  </div>
+                  <img src={card.image} alt="link"></img>
+                </MetaData>
+              </UrlInfo>
+            </CardContainer>
+          );
+        }
       })}
     </>
   );

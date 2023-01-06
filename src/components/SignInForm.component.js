@@ -28,13 +28,14 @@ export default function SignInForm() {
 
         e.preventDefault();
 
-        const promise = axios.post(`https://projeto18-linkr-back.onrender.com/signin`, form);
+        const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/signin`, form);
 
         setDisabled(true);
 
         promise.then((res) => {
-            setToken(res.data);
-            console.log(res.data)
+            setToken(res.data.token);
+            console.log(res.data.token);
+            localStorage.setItem('userId' , res.data.userId);
             setDisabled(false);
             navigate("/timeline");
         });

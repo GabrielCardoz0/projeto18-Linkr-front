@@ -5,7 +5,7 @@ import { baseFont } from "../constants/fonts"
 import { useState } from 'react'
 import axios from "axios"
 import swal from "sweetalert"
-import { URL, API_URL } from "../constants/urls"
+import { URL } from "../constants/urls"
 
 export default function FillCard() {
     const [form, setForm] = useState({
@@ -46,7 +46,7 @@ export default function FillCard() {
     return(
         <>
         <CardContainer>
-            <img src={linkr}></img>
+            <img src={linkr} alt=""></img>
             <AlignBox>
                 <h2>What are you going to share today?</h2>
                 <InputUrl

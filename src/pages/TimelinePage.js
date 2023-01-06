@@ -27,6 +27,7 @@ const TimelineContainer = styled.div`
 `
 
 const Title = styled.div`
+    box-sizing: border-box;
     font-family: ${titleFont};
     font-style: normal;
     font-weight: 700;
@@ -36,4 +37,12 @@ const Title = styled.div`
     margin-top: 150px;
     margin-bottom: 43px;
     width: 611px;
+    @media (max-width: 800px) {
+        width: 100%;
+        padding-left: 17px;
+        font-size: 33px;
+        line-height: 49px;
+        margin-bottom: 19px;
+        margin-top: 91px;
+    }
 `

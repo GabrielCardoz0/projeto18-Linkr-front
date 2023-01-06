@@ -19,7 +19,7 @@ export const Sidebar = ({ active }) => {
       {headers: { authorization: `Bearer ${token}`}}
     ).then(() => {
       setToken('');
-      localStorage.removeItem('token');
+      localStorage.clear();
       active(false);
       navigate("/");
     }).catch( () =>{

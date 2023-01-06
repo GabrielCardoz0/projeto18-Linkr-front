@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import profile from "../assets/images/image 4.png"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/urls";
 import { ReactTagify } from "react-tagify";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -11,6 +11,7 @@ export default function PublishedCards(){
 
     const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
 
 
@@ -44,11 +45,11 @@ console.log(cards);
 
             <UrlInfo>
                 <h2>{card.username}</h2>
-                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>
+                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> navigate(`/hashtag/:${tag.slice(1,tag.length -1)}`)}>
                 <h3>{card.caption}</h3>
                 </ReactTagify>
                 <MetaData>
-                <a href={card.url} target="_blank">
+               <a href={card.url} target="_blank" rel="noreferrer" >
                 <div>
                 <h3>
                 {card.title}
@@ -56,10 +57,13 @@ console.log(cards);
                 <h5>
                 {card.description}
                 </h5>
-            <h4>{card.url}</h4>
+                <h4>
+                {card.url}
+                </h4>
                 </div>
-                <img src={card.image} alt="link"></img>
                 </a>
+                <img src={card.image} alt="link"></img>
+            
                 </MetaData>
             </UrlInfo>
 
@@ -170,11 +174,12 @@ const MetaData = styled.div`
             color: #cecece;
 
         }
-        & img{
+        & a{
+            img{
             width: 30%;
             height: 100%;
             border-radius: 11px;
-
+            }
         }
     }
 

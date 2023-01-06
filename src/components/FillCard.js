@@ -4,6 +4,7 @@ import { baseFont } from "../constants/fonts"
 import { useState } from 'react'
 import axios from "axios"
 import swal from "sweetalert"
+import { useAuth } from "../providers/auth"
 
 export default function FillCard() {
     const { token, userimage } = useAuth();

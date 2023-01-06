@@ -44,13 +44,8 @@ console.log(cards);
             </UserInfo>
 
             <UrlInfo>
-<<<<<<< HEAD
-                <h2>{card.userId}</h2>
-                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>  
-=======
                 <h2>{card.username}</h2>
                 <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> navigate(`/hashtag/:${tag.slice(1,tag.length -1)}`)}>
->>>>>>> 86898212b714041808dad36876792f07184c19da
                 <h3>{card.caption}</h3>
                 </ReactTagify>
                 <MetaData>

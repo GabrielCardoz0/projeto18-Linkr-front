@@ -44,7 +44,7 @@ console.log(cards);
 
             <UrlInfo>
                 <h2>{card.userId}</h2>
-                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>>  
+                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> alert(tag)}>  
                 <h3>{card.caption}</h3>
                 </ReactTagify>
                 <MetaData>

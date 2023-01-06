@@ -2,11 +2,12 @@ import styled from "styled-components"
 import FillCard from "../components/FillCard"
 import PublishedCards from "../components/PublishedCards"
 import { titleFont } from "../constants/fonts"
+import Navbar from "../components/Navbar"
 
 export default function TimelinePage() {
     return(
         <>
-        {/* missing NavBar */}
+        <Navbar/>
         <TimelineContainer>
         <Title>timeline</Title>
         <FillCard/>

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Container, Div} from '../assets/styles/navbarStyle';
 import {FiChevronRight, FiChevronDown} from 'react-icons/fi'
-import {Sidebar} from './sidebar';
+import {Sidebar} from './Sidebar';
 
 
 import logo from "../assets/images/linkr.png";

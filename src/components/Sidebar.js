@@ -15,7 +15,7 @@ export const Sidebar = ({ active }) => {
   const logOut = () => {
     
     axios.delete(
-      "https://projeto18-linkr-back.onrender.com/timeline",
+      `http://localhost:5000/logout`,
       {headers: { authorization: `Bearer ${token}`}}
     ).then(() => {
       setToken('');

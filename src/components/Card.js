@@ -8,19 +8,18 @@ import { useNavigate } from "react-router-dom";
 
 export default function Card(card){
 
-    const { token } = useContext(AuthContext);
-    const [liked, setLiked] = useState(); //por enquanto, quando tiver o getLike aqui vai ser diferente
+    const token = localStorage.getItem("token")
+    const [liked, setLiked] = useState(!!card.liked); 
     const navigate = useNavigate();
 
-    function likeOrDislike(id){
-
+    function like(id){
         const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/like`, {
-            "cardId": id
-        },
-        {
-            headers:{
-                authorization: token
-            }
+          headers:{
+              authorization: `Bearer ${token}`
+          }, 
+          data: {
+            "postId": id
+          }
         });
 
         promise.then(() => setLiked(!liked));
@@ -28,11 +27,26 @@ export default function Card(card){
         promise.catch((e) => alert("Erro ao curtir este link. Tente mais tarde."));
     }
 
+    function dislike(id){
+      const promise = axios.delete(`${process.env.REACT_APP_API_BASE_URL}/dislike`, {
+        headers:{
+            authorization: `Bearer ${token}`
+        }, 
+        data: {
+          "postId": id
+        }
+      });
+
+      promise.then(() => setLiked(!liked));
+
+      promise.catch((e) => alert("Erro ao descurtir este link. Tente mais tarde."));
+  }
+
     return (
         <CardContainer>
         <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
-          <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => setLiked(!liked)}></ion-icon>
+          <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => liked? like(card.id): dislike(card.id)}></ion-icon>
         </UserInfo>
 
         <UrlInfo>

@@ -4,6 +4,7 @@ import axios from "axios";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
+import {API_URL} from "../constants/urls" 
 
 export default function PublishedCards() {
   const [cards, setCards] = useState([]);
@@ -13,9 +14,10 @@ export default function PublishedCards() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/timeline`)
+      .get(`${API_URL}/timeline`)
       .then((res) => {
-        setCards(res.data);
+        setCards(res.data.posts);
+        console.log(res.data.posts);
         setLoading(false);
         
       })

@@ -4,6 +4,7 @@ import PublishedCards from "../components/PublishedCards"
 import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
 
+
 export default function TimelinePage() {
     return(
         <>

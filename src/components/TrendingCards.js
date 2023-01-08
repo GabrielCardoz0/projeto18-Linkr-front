@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 
 

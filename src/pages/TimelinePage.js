@@ -23,9 +23,9 @@ export default function TimelinePage() {
         axios.get(`${API_URL}/timeline`)
         .then((res) => {
            
-            setLoading(false);
             setCards(res.data.posts);
             setHashtags(res.data.hashtags);
+            setLoading(false);
             return;
         })
         .catch((err) => {
@@ -52,6 +52,7 @@ export default function TimelinePage() {
                 <PublishedCards key={i} card={card}/>
             )
         })}
+        <TrendingCards hashtags={hashtags}/>
         </TimelineContainer>
         
         </>
@@ -62,7 +63,7 @@ const TimelineContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    align-items: center;
+    margin-left: 10%;
     padding-bottom: 30px;
 `
 

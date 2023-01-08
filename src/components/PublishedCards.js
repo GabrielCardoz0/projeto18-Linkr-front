@@ -1,89 +1,84 @@
 import styled from "styled-components";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
-import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
+import { BsFillPencilFill } from "react-icons/bs";
+import DeleteModal from "./DeleteModal";
 
 export default function PublishedCards({ card }) {
- 
   const navigate = useNavigate();
 
+  if (Number(localStorage.getItem("userId")) === card.userId) {
+    return (
+      <CardContainer>
+        <UserInfo>
+          <img src={card.pictureUrl} alt="profile"></img>
+          <ion-icon name="heart-outline"></ion-icon>
+        </UserInfo>
 
+        <UrlInfo>
+          <CardHeader>
+            <h2>{card.username}</h2>
+            <ul>
+              <DeleteModal postId={card.id} />
+              <BsFillPencilFill />
+            </ul>
+          </CardHeader>
 
-     
-        if (localStorage.getItem("userId") === card.userId) {
-          return (
-            <CardContainer>
-              <UserInfo>
-                <img src={card.pictureUrl} alt="profile"></img>
-                <ion-icon name="heart-outline"></ion-icon>
-              </UserInfo>
+          <ReactTagify
+            colors={"#FFFFFF"}
+            tagClicked={(tag) =>
+              navigate(`/hashtag/${tag.slice(1, tag.length)}`)
+            }
+          >
+            <h3>{card.caption}</h3>
+          </ReactTagify>
 
-              <UrlInfo>
-                <CardHeader>
-                  <h2>{card.username}</h2>
-                  <ul>
-                    <BsTrashFill />
-                    <BsFillPencilFill />
-                  </ul>
-                </CardHeader>
+          <MetaData>
+            <a href={card.url} target="_blank" rel="noreferrer">
+              <div>
+                <h3>{card.title}</h3>
+                <h5>{card.description}</h5>
+                <h4>{card.url}</h4>
+              </div>
+            </a>
+            <img src={card.image} alt="link"></img>
+          </MetaData>
+        </UrlInfo>
+      </CardContainer>
+    );
+  } else {
+    return (
+      <CardContainer>
+        <UserInfo>
+          <img src={card.pictureUrl} alt="profile"></img>
+          <ion-icon name="heart-outline"></ion-icon>
+        </UserInfo>
 
-                <ReactTagify
-                  colors={"#FFFFFF"}
-                  tagClicked={(tag) =>
-                    navigate(`/hashtag/${tag.slice(1, tag.length )}`)
-                  }
-                >
-                  <h3>{card.caption}</h3>
-                </ReactTagify>
+        <UrlInfo>
+          <h2>{card.username}</h2>
+          <ReactTagify
+            colors={"#FFFFFF"}
+            tagClicked={(tag) =>
+              navigate(`/hashtag/${tag.slice(1, tag.length)}`)
+            }
+          >
+            <h3>{card.caption}</h3>
+          </ReactTagify>
 
-                <MetaData>
-                  <a href={card.url} target="_blank" rel="noreferrer">
-                    <div>
-                      <h3>{card.title}</h3>
-                      <h5>{card.description}</h5>
-                      <h4>{card.url}</h4>
-                    </div>
-                  </a>
-                  <img src={card.image} alt="link"></img>
-                </MetaData>
-              </UrlInfo>
-            </CardContainer>
-          );
-        } else {
-          return (
-            <CardContainer>
-              <UserInfo>
-                <img src={card.pictureUrl} alt="profile"></img>
-                <ion-icon name="heart-outline"></ion-icon>
-              </UserInfo>
-
-              <UrlInfo>
-                <h2>{card.username}</h2>
-                <ReactTagify
-                  colors={"#FFFFFF"}
-                  tagClicked={(tag) =>
-                    navigate(`/hashtag/${tag.slice(1, tag.length )}`)
-                  }
-                >
-                  <h3>{card.caption}</h3>
-                </ReactTagify>
-
-                <MetaData>
-                  <a href={card.url} target="_blank" rel="noreferrer">
-                    <div>
-                      <h3>{card.title}</h3>
-                      <h5>{card.description}</h5>
-                      <h4>{card.url}</h4>
-                    </div>
-                  </a>
-                  <img src={card.image} alt="link"></img>
-                </MetaData>
-              </UrlInfo>
-            </CardContainer>
-          );
-        }
-      
-  
+          <MetaData>
+            <a href={card.url} target="_blank" rel="noreferrer">
+              <div>
+                <h3>{card.title}</h3>
+                <h5>{card.description}</h5>
+                <h4>{card.url}</h4>
+              </div>
+            </a>
+            <img src={card.image} alt="link"></img>
+          </MetaData>
+        </UrlInfo>
+      </CardContainer>
+    );
+  }
 }
 
 const CardContainer = styled.div`

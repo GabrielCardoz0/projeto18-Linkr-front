@@ -1,43 +1,17 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { API_URL } from "../constants/urls";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 
 
 
-export default function PublishedCards(){
+export default function PublishedCards({card}){
 
-    const [cards, setCards] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-
-
-
-    useEffect(() => {
-        setLoading(true);
-        axios.get(`${API_URL}/timeline`)
-        .then((res) => {
-            setCards(res.data);
-            setLoading(false);
-            console.log(res.data);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    }, []);
-console.log(cards);
-    if(loading){
-        return(
-            <h1>Loading...</h1>
-        )
-    }
+const navigate = useNavigate();
 
     return(
         <>
-        {cards.map((card) => {
-     return(    <CardContainer>
+       
+     <CardContainer>
             <UserInfo>
                 <img src={card.pictureUrl} alt="profile"></img>
                 <ion-icon name="heart-outline"></ion-icon>
@@ -45,7 +19,7 @@ console.log(cards);
 
             <UrlInfo>
                 <h2>{card.username}</h2>
-                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> navigate(`/hashtag/:${tag.slice(1,tag.length -1)}`)}>
+                <ReactTagify colors={"#FFFFFF"} tagClicked={(tag)=> navigate(`/hashtag/${tag.slice(1,tag.length)}`)}>
                 <h3>{card.caption}</h3>
                 </ReactTagify>
                 <MetaData>
@@ -67,13 +41,14 @@ console.log(cards);
                 </MetaData>
             </UrlInfo>
 
-        </CardContainer>    )
-        })}
+        </CardContainer>    
+       
         </>
     );
 }
 
 const CardContainer = styled.div`
+    display: flex;
     width: 611px;
     height: 276px;
     background-color: #171717;

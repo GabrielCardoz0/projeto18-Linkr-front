@@ -26,9 +26,15 @@ export default function DeleteModal(params) {
     async function deletePost(){
         const verification = await deleteThisPost(params.postId);
 
-        if(verification) alert('Post deletado com sucesso');
+        if(verification){
+            alert('Post deletado com sucesso');
+            window.location.reload();
+        }
 
-        if(!verification) alert('Não foi possível deletar o post, tente novamente mais tarde');
+        if(!verification){
+            alert('Não foi possível deletar o post, tente novamente mais tarde');
+        }
+    
         setModalOpen(false);
     };
 
@@ -75,6 +81,7 @@ const OpcoesModal = styled.div`
         width:134px;
         height:37px;
         font-size:18px;
+        cursor:pointer;
     }
     .cancelar{
         background-color:#FFF;

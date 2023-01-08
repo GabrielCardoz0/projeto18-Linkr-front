@@ -1,10 +1,10 @@
 import styled from "styled-components"
 import { fillCardTitleColor, inputPost, placeholderColor, publishButtonColor } from "../constants/colors"
-import { baseFont } from "../constants/fonts"
+import { baseFont } from "../constants/fonts";
 import { useState } from 'react'
-import axios from "axios"
-import swal from "sweetalert"
-import { useAuth } from "../providers/auth"
+import axios from "axios";
+import swal from "sweetalert";
+import { useAuth } from "../providers/auth";
 
 export default function FillCard() {
     const { token, userimage } = useAuth();

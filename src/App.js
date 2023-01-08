@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import GlobalStyle from './assets/styles/GlobalStyle';
-import HashtagPage from './pages/HashtagPage';
 import SignInPage from './pages/signInPage';
 import SignUpPage from './pages/signUpPage';
 import TimelinePage from './pages/TimelinePage';

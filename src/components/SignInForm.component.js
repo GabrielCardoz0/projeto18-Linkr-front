@@ -8,7 +8,7 @@ import styled from "styled-components";
 
 export default function SignInForm() {
 
-    const { setToken } = useContext(AuthContext);
+    const { setToken, setUserimage } = useContext(AuthContext);
     const navigate = useNavigate();
     const [form, setForm] = useState({
         email: '',
@@ -33,10 +33,20 @@ export default function SignInForm() {
         setDisabled(true);
 
         promise.then((res) => {
-            setToken(res.data);
-            console.log(res.data)
+            setToken(res.data.token);
+            localStorage.setItem('userId' , res.data.userId);
+            
+            
+			localStorage.setItem('token', JSON.stringify(res.data.token));
+
+            if(res.data.userImage){
+                setUserimage(res.data.userImage);
+			    localStorage.setItem('userimage', JSON.stringify(res.data.userImage));
+            }
+            
             setDisabled(false);
             navigate("/timeline");
+			
         });
 
         promise.catch((err) => {

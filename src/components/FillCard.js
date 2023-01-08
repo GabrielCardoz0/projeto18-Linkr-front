@@ -1,52 +1,54 @@
 import styled from "styled-components"
-import linkr from "../assets/images/image 4.png"
 import { fillCardTitleColor, inputPost, placeholderColor, publishButtonColor } from "../constants/colors"
 import { baseFont } from "../constants/fonts"
 import { useState } from 'react'
 import axios from "axios"
 import swal from "sweetalert"
-import { URL, API_URL } from "../constants/urls"
+import { useAuth } from "../providers/auth"
 
 export default function FillCard() {
+    const { token, userimage } = useAuth();
     const [form, setForm] = useState({
 		url: '',
 		caption: ''
 	});
 	const [load, setLoad] = useState(false);
 
-    function fillForm(e) {
-		if (!load) {
-			const { name, value } = e.target;
-			const formContent = { ...form, [name]: value };
-			setForm(formContent);
-			console.log(formContent)
-		}
-	}
+  function fillForm(e) {
+    if (!load) {
+      const { name, value } = e.target;
+      const formContent = { ...form, [name]: value };
+      setForm(formContent);
+    }
+  }
 
     function sendPost() {
-		const URLpost = URL + 'posts';
-		console.log(form);
-		const promise = axios.post(URLpost, form);
+		const URLpost = process.env.REACT_APP_API_BASE_URL + '/timeline';
+		const promise = axios.post(URLpost, form,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+            );
 
-		setLoad(true);
+    setLoad(true);
 
-		promise.then((res) => {
-			setLoad(false);
-            window.location.reload(false);
-		});
+    promise.then((res) => {
+      setLoad(false);
+      window.location.reload(false);
+    });
 
-		promise.catch((err) => {
-			swal({
-				title: "Houve um erro ao publicar seu link",
-			});
-			setLoad(false);
-		});
-	} 
+    promise.catch((err) => {
+      swal({
+        title: "Houve um erro ao publicar seu link",
+      });
+      setLoad(false);
+    });
+  }
 
     return(
         <>
         <CardContainer>
-            <img src={linkr}></img>
+            <img src={userimage} alt="user"></img>
             <AlignBox>
                 <h2>What are you going to share today?</h2>
                 <InputUrl
@@ -96,13 +98,25 @@ const CardContainer = styled.div`
         height: 50px;
         border-radius: 26.5px;
     }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        height: 164px;
+        border-radius: 0px;
+        justify-content: center;
+
+        & img {
+            width: 0px;
+            height: 0px;
+        }
+    }
 `
 const AlignBox = styled.div`
-    display: flex;
-    width: 503px;
-    flex-direction: column;
-    align-items: flex-end;
-    & h2 {
+  display: flex;
+  width: 503px;
+  flex-direction: column;
+  align-items: flex-end;
+  & h2 {
     font-family: ${baseFont};
     font-style: normal;
     width: 503px;
@@ -110,47 +124,70 @@ const AlignBox = styled.div`
     font-size: 20px;
     line-height: 24px;
     color: ${fillCardTitleColor};
+
+    @media (max-width: 800px) {
+        width: 100%;
+        text-align: center;
+      & h2{
+            width: 100%;
+            font-size: 17px;
+            line-height: 20px;
+        }
+    }    
     }
 `
 const InputUrl = styled.input`
-    border: none;
-    box-sizing: border-box;
-    width: 503px;
-    height: 30px;
-    font-family: ${baseFont};
-    background-color: ${inputPost};
-    border-radius: 5px;
-    padding: 5px;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 15px;
-    line-height: 18px;
-    margin-bottom: 5px;
-    margin-top: 13px;
+  border: none;
+  box-sizing: border-box;
+  width: 503px;
+  height: 30px;
+  font-family: ${baseFont};
+  background-color: ${inputPost};
+  border-radius: 5px;
+  padding: 5px;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+  margin-bottom: 5px;
+  margin-top: 13px;
 
     ::placeholder{
         color: ${placeholderColor};
     }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        font-size: 13px;
+        line-height: 16px;
+    } 
 `
 const InputCaption = styled.textarea`
-    border: none;
-    box-sizing: border-box;
-    width: 502px;
-    height: 66px;
-    font-family: ${baseFont};
-    background-color: ${inputPost};
-    border-radius: 5px;
-    padding: 5px;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 15px;
-    line-height: 18px;
-    margin-bottom: 5px;
+  border: none;
+  box-sizing: border-box;
+  width: 502px;
+  height: 66px;
+  font-family: ${baseFont};
+  background-color: ${inputPost};
+  border-radius: 5px;
+  padding: 5px;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+  margin-bottom: 5px;
 
     ::placeholder{
         color: ${placeholderColor};
         height: 50px;
     }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        height: 47px;
+        font-size: 13px;
+        line-height: 16px;
+    } 
 `
 const PublishButton = styled.button`
     width: 112px;
@@ -165,4 +202,8 @@ const PublishButton = styled.button`
     background-color: ${publishButtonColor};
     border: none;
     border-radius: 5px;
+
+    @media (max-width: 800px) {
+        height: 22px;
+    } 
 `

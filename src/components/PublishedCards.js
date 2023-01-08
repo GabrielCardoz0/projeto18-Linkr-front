@@ -1,37 +1,16 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
 
-export default function PublishedCards() {
-  const [cards, setCards] = useState([]);
-  const [loading, setLoading] = useState(false);
+export default function PublishedCards({ card }) {
+ 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/timeline`)
-      .then((res) => {
-        setCards(res.data);
-        setLoading(false);
-        
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-  console.log(cards);
-  if (loading) {
-    return <h1>Loading...</h1>;
-  }
 
-  return (
-    <>
-      {cards.map((card) => {
-        if (localStorage.getItem("userId") === cards.userId) {
+
+     
+        if (localStorage.getItem("userId") === card.userId) {
           return (
             <CardContainer>
               <UserInfo>
@@ -51,7 +30,7 @@ export default function PublishedCards() {
                 <ReactTagify
                   colors={"#FFFFFF"}
                   tagClicked={(tag) =>
-                    navigate(`/hashtag/:${tag.slice(1, tag.length - 1)}`)
+                    navigate(`/hashtag/${tag.slice(1, tag.length )}`)
                   }
                 >
                   <h3>{card.caption}</h3>
@@ -83,7 +62,7 @@ export default function PublishedCards() {
                 <ReactTagify
                   colors={"#FFFFFF"}
                   tagClicked={(tag) =>
-                    navigate(`/hashtag/:${tag.slice(1, tag.length - 1)}`)
+                    navigate(`/hashtag/${tag.slice(1, tag.length )}`)
                   }
                 >
                   <h3>{card.caption}</h3>
@@ -103,13 +82,12 @@ export default function PublishedCards() {
             </CardContainer>
           );
         }
-      })}
-    </>
-  );
+      
+  
 }
 
 const CardContainer = styled.div`
-  width: 611px;
+  width: 48%;
   height: 276px;
   background-color: #171717;
   margin-top: 30px;

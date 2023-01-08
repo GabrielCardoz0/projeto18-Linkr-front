@@ -1,40 +1,38 @@
 import styled from "styled-components"
-import FillCard from "../components/FillCard"
 import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
-import { titleFont } from "../constants/fonts"
-import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { baseURL } from "../constants/urls";
+import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
+import Navbar from "../components/Navbar"
 
-
-
-export default function TimelinePage() {
+export default function UserPage() {
 
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { hashtag } = useParams();
+    const [name,setName] = useState("");
+    const { id } = useParams();
 
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${baseURL}/timeline`)
+        axios.get(`${baseURL}/user/${id}`)
         .then((res) => {
-            const { posts, hashtags } = res.data;
-            setCards(posts);
-            setHashtags(hashtags);
             setLoading(false);
+            setName(res.data.posts[0].username);
+            setCards(res.data.posts);
+            setHashtags(res.data.hashtags);
             return;
         })
         .catch((err) => {
             console.log(err);
-            alert("An error has occurred. Please try again later.");
-      
+            alert("An error has occurred. Please try again later.")
+        
         })
-    }, [hashtag]);
+    }, [id]);
 
     if(loading){
         return(
@@ -44,32 +42,40 @@ export default function TimelinePage() {
 
     return(
         <>
+   
         <Navbar/>
-        <TimelineContainer>
-        <Title>timeline</Title>
-        <FillCard/>
+        <UserContainer>
+        <Title>{name}</Title>
+       
+        
         {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        })}
-        <TrendingCards hashtags={hashtags}/>
-        </TimelineContainer>
+        }
+        )}
+          
+                <TrendingCards hashtags={hashtags}/>
+    
+        
+        </UserContainer>
+      
         
         </>
     )
 }
 
-const TimelineContainer = styled.div`
+const UserContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    margin-left: 10%;
-    padding-bottom: 30px;
+    margin-left: 12%;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    
 `
 
 const Title = styled.div`
-    box-sizing: border-box;
     font-family: ${titleFont};
     font-style: normal;
     font-weight: 700;
@@ -79,12 +85,4 @@ const Title = styled.div`
     margin-top: 150px;
     margin-bottom: 43px;
     width: 611px;
-    @media (max-width: 800px) {
-        width: 100%;
-        padding-left: 17px;
-        font-size: 33px;
-        line-height: 49px;
-        margin-bottom: 19px;
-        margin-top: 91px;
-    }
 `

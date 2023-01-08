@@ -2,25 +2,27 @@ import styled from "styled-components"
 import FillCard from "../components/FillCard"
 import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
+import { titleFont } from "../constants/fonts"
+import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/urls";
-import { titleFont } from "../constants/fonts"
-import Navbar from "../components/Navbar"
+import { useParams } from "react-router-dom";
+
 
 export default function TimelinePage() {
 
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
- 
-
+    const { hashtag } = useParams();
 
 
     useEffect(() => {
         setLoading(true);
         axios.get(`${API_URL}/timeline`)
         .then((res) => {
+           
             setLoading(false);
             setCards(res.data.posts);
             setHashtags(res.data.hashtags);
@@ -28,10 +30,10 @@ export default function TimelinePage() {
         })
         .catch((err) => {
             console.log(err);
-            alert("An error has occurred. Please try again later.")
-            return;
+            alert("An error has occurred. Please try again later.");
+      
         })
-    }, []);
+    }, [hashtag]);
 
     if(loading){
         return(
@@ -45,19 +47,12 @@ export default function TimelinePage() {
         <TimelineContainer>
         <Title>timeline</Title>
         <FillCard/>
-        
         {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        }
-        )}
-          
-                <TrendingCards hashtags={hashtags}/>
-    
-        
+        })}
         </TimelineContainer>
-      
         
         </>
     )
@@ -67,8 +62,8 @@ const TimelineContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    margin-left: 12%;
-    
+    align-items: center;
+    padding-bottom: 30px;
 `
 
 const Title = styled.div`

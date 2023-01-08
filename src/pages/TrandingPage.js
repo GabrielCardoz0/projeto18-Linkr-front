@@ -6,8 +6,9 @@ import axios from "axios";
 import { API_URL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
+import Navbar from "../components/Navbar"
 
-export default function TimelinePage() {
+export default function TrendingPage() {
 
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
@@ -41,7 +42,7 @@ export default function TimelinePage() {
     return(
         <>
    
-       
+        <Navbar/>
         <TrendingContainer>
         <Title># {hashtag}</Title>
        

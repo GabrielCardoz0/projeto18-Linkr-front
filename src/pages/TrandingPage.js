@@ -3,7 +3,7 @@ import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../constants/urls";
+import { baseURL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
@@ -18,7 +18,7 @@ export default function TrendingPage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${API_URL}/hashtag/${hashtag}`)
+        axios.get(`${baseURL}/hashtag/${hashtag}`)
         .then((res) => {
            
             setLoading(false);

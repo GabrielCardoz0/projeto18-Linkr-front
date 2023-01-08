@@ -4,13 +4,24 @@ import { createContext } from 'react';
 export const AuthContext = createContext({});
 
 export const AuthProvider = (props) => {
-	const [token, setToken] = useState('');
+	const [token, setToken] = useState(
+		localStorage.getItem('token')
+			? JSON.parse(localStorage.getItem('token'))
+			: ''
+	);
+	const [userimage, setUserimage] = useState(
+		localStorage.getItem('userimage')
+			? JSON.parse(localStorage.getItem('userimage'))
+			: 'https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg'
+	);
 
 	return (
 		<AuthContext.Provider
 			value={{
 				token,
 				setToken,
+				userimage,
+				setUserimage
 			}}
 		>
 			{props.children}

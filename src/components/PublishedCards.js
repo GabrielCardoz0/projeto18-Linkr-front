@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../constants/urls";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
+import {API_URL} from "../constants/urls" 
 
 export default function PublishedCards() {
   const [cards, setCards] = useState([]);
@@ -16,9 +16,10 @@ export default function PublishedCards() {
     axios
       .get(`${API_URL}/timeline`)
       .then((res) => {
-        setCards(res.data);
+        setCards(res.data.posts);
+        console.log(res.data.posts);
         setLoading(false);
-        console.log(res.data);
+        
       })
       .catch((err) => {
         console.log(err);

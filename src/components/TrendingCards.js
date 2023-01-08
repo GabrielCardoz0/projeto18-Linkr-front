@@ -10,9 +10,10 @@ export default function TrendingCards({hashtags}) {
             <Teme>
            <h2>trending</h2>
            </Teme>
+           
          {hashtags.map((hashtag, i) => {
                 return(
-                 <h3 key={i} onClick={(hashtag)=>{navigate(`/hashtag/:${hashtag.name}`)}}># {hashtag.name}</h3>
+                 <h3 key={i} onClick={(hashtag)=>{navigate(`/hashtag/${hashtag.name}`)}}># {hashtag.name}</h3>
                   
                 )
          })}
@@ -29,7 +30,7 @@ const Container = styled.div`
     height: 406px;
     position: absolute;
     margin-top: 254px;
-    margin-left: 650px;
+    margin-left: 60%;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     h3{
         font-family: Lato;

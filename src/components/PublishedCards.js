@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
-import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
+import { BsFillPencilFill } from "react-icons/bs";
 import {API_URL} from "../constants/urls" 
+import DeleteModal from "./DeleteModal";
 
 export default function PublishedCards() {
   const [cards, setCards] = useState([]);
@@ -17,23 +18,22 @@ export default function PublishedCards() {
       .get(`${API_URL}/timeline`)
       .then((res) => {
         setCards(res.data.posts);
-        console.log(res.data.posts);
         setLoading(false);
         
       })
       .catch((err) => {
         console.log(err);
       });
+
   }, []);
-  console.log(cards);
+
   if (loading) {
     return <h1>Loading...</h1>;
   }
-
   return (
     <>
       {cards.map((card) => {
-        if (localStorage.getItem("userId") === cards.userId) {
+        if (Number(localStorage.getItem("userId")) === card.userId) {
           return (
             <CardContainer>
               <UserInfo>
@@ -45,7 +45,7 @@ export default function PublishedCards() {
                 <CardHeader>
                   <h2>{card.username}</h2>
                   <ul>
-                    <BsTrashFill />
+                    <DeleteModal postId={card.id} />
                     <BsFillPencilFill />
                   </ul>
                 </CardHeader>

@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsFillPencilFill } from "react-icons/bs";
-import { API_URL } from "../constants/urls";
 import DeleteModal from "./DeleteModal";
 
 export default function PublishedCards({ card }) {

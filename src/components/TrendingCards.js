@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 
@@ -13,7 +14,7 @@ export default function TrendingCards({hashtags}) {
            
          {hashtags.map((hashtag, i) => {
                 return(
-                 <h3 key={i} onClick={(hashtag)=>{navigate(`/hashtag/${hashtag.name}`)}}># {hashtag.name}</h3>
+                 <h3 key={i} onClick={(hashtag)=>{navigate(`/hashtag/${hashtags[i].name}`)}}># {hashtag.name}</h3>
                   
                 )
          })}
@@ -29,8 +30,8 @@ const Container = styled.div`
     width: 301px;
     height: 406px;
     position: absolute;
-    margin-top: 254px;
-    margin-left: 60%;
+    margin-top: 272px;
+    margin-left: 54%;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     h3{
         font-family: Lato;

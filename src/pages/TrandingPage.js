@@ -69,6 +69,7 @@ const TrendingContainer = styled.div`
     width: 100%;
     flex-direction: column;
     margin-left: 12%;
+    padding-bottom: 30px;
     
 `
 

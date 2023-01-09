@@ -35,7 +35,7 @@ export default function UserPage() {
             alert("An error has occurred. Please try again later.")
         
         })
-    }, [id]);
+    }, [token,id]);
 
     if(loading){
         return(

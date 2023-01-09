@@ -34,7 +34,7 @@ export default function TrendingPage() {
             alert("An error has occurred. Please try again later.")
             return;
         })
-    }, [hashtag]);
+    }, [hashtag, token]);
 
     if(loading){
         return(

@@ -7,9 +7,10 @@ import { baseURL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
+import { useAuth } from "../providers/auth";
 
 export default function TrendingPage() {
-
+    const { token } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -18,7 +19,9 @@ export default function TrendingPage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${baseURL}/hashtag/${hashtag}`)
+        axios.get(`${baseURL}/hashtag/${hashtag}`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
         .then((res) => {
            
             setLoading(false);
@@ -35,7 +38,9 @@ export default function TrendingPage() {
 
     if(loading){
         return(
-            <h1>Loading...</h1>
+            <Load>
+                Loading...
+            </Load>
         )
     }
 
@@ -66,9 +71,9 @@ export default function TrendingPage() {
 
 const TrendingContainer = styled.div`
     display: flex;
-    width: 100%;
+    width: 80%;
     flex-direction: column;
-    margin-left: 12%;
+    margin-left: 30%;
     padding-bottom: 30px;
     
 `
@@ -83,4 +88,12 @@ const Title = styled.div`
     margin-top: 150px;
     margin-bottom: 43px;
     width: 611px;
+`
+const Load = styled.h1`
+    font-family: ${titleFont};
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 30px;
+    color: white;
 `

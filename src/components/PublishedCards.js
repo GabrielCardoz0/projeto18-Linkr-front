@@ -2,10 +2,94 @@ import styled from "styled-components";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsFillPencilFill } from "react-icons/bs";
+import {useState, useRef, useEffect} from "react";
+import { API_URL } from "../constants/urls";
 import DeleteModal from "./DeleteModal";
 
+import axios from "axios";
+import { useAuth } from "../providers/auth";
+import swal from "sweetalert";
+import { Popup } from "semantic-ui-react";
+import "semantic-ui-css/semantic.min.css";
+
+
+
 export default function PublishedCards({ card }) {
+
   const navigate = useNavigate();
+  const [editPost, setEditPost] = useState(false);
+  const [edited, setEdited] = useState('');
+  const [caption, setCaption] = useState(card.caption);
+  const [disabled, setDisabled] = useState(false);
+  const captionRef = useRef(null);
+  
+
+  const postEdit = ()=>{
+    setEditPost(!editPost)
+    setDisabled(false)
+    if(edited){
+      setCaption(edited);
+      
+    } else{
+      setCaption(card.caption);
+    }
+  };
+
+  const keyPress= (e) =>{
+    if(e.code === "Enter"){
+      setDisabled(true)
+      axios.put(`${API_URL}/timeline`,{id:card.id, caption})
+      .then((response)=>{
+        
+        setCaption(response.data);
+        setEdited(response.data)
+        setEditPost(!editPost);
+      })
+      .catch(()=>{
+        alert("Não foi possível editar esse post");
+        setCaption(card.caption);
+        setEditPost(!editPost);
+      })
+    } else if(e.code==="Escape"){
+      setEditPost(!editPost)
+      if(edited){
+        setCaption(edited);
+        
+      } else{
+        setCaption(card.caption);
+      }
+      
+    }
+    
+  }
+
+  useEffect(() => {
+    if (editPost) {
+      captionRef.current.focus();
+    }
+  },[editPost]);
+  
+
+  const { token } = useAuth();
+  const [message, setMessage] = useState('')
+    function getLikes(){
+        const URLlikes = `${process.env.REACT_APP_API_BASE_URL}/likes/${card.id}`;
+        const promise = axios.get(URLlikes,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+            );
+        promise.then((res) => {
+          //console.log(res.data)
+          setMessage(res.data.messageLikes)
+        });
+    
+        promise.catch((err) => {
+          swal({
+            title: "Houve um erro ao mostrar as curtidas",
+          });
+        })
+    }
 
   if (Number(localStorage.getItem("userId")) === card.userId) {
     return (
@@ -13,6 +97,14 @@ export default function PublishedCards({ card }) {
         <UserInfo>
           <img src={card.pictureUrl} alt="profile"></img>
           <ion-icon name="heart-outline"></ion-icon>
+          <Popup
+            trigger={<LikeText onMouseEnter={getLikes} >{card.numberOfLikes} likes
+            </LikeText>}
+            position="bottom center"
+          >
+          {message}
+          </Popup>
+          
         </UserInfo>
 
         <UrlInfo>
@@ -20,24 +112,24 @@ export default function PublishedCards({ card }) {
             <h2>{card.username}</h2>
             <ul>
               <DeleteModal postId={card.id} />
-              <BsFillPencilFill />
+              <BsFillPencilFill onClick={postEdit}/>
             </ul>
           </CardHeader>
-
+          {editPost? <Input ref={captionRef} type={"text"} value={caption} onChange={(e) => setCaption(e.target.value)} onKeyDown={(e) => keyPress(e)} disabled={disabled}/>:
           <ReactTagify
             colors={"#FFFFFF"}
             tagClicked={(tag) =>
-              navigate(`/hashtag/${tag.slice(1, tag.length)}`)
+              navigate(`/hashtag/${tag.slice(1, tag.length )}`)
             }
           >
-            <h3>{card.caption}</h3>
-          </ReactTagify>
+            <h3>{caption}</h3>
+          </ReactTagify>}
 
           <MetaData>
             <a href={card.url} target="_blank" rel="noreferrer">
               <div>
                 <h3>{card.title}</h3>
-                <h5>{card.description}</h5>
+                <h5 >{card.description}</h5>
                 <h4>{card.url}</h4>
               </div>
             </a>
@@ -52,6 +144,13 @@ export default function PublishedCards({ card }) {
         <UserInfo>
           <img src={card.pictureUrl} alt="profile"></img>
           <ion-icon name="heart-outline"></ion-icon>
+          <Popup
+            trigger={<LikeText onMouseEnter={getLikes} >{card.numberOfLikes} likes
+            </LikeText>}
+            position="bottom center"
+          >
+          {message}
+          </Popup>
         </UserInfo>
 
         <UrlInfo>
@@ -59,7 +158,7 @@ export default function PublishedCards({ card }) {
           <ReactTagify
             colors={"#FFFFFF"}
             tagClicked={(tag) =>
-              navigate(`/hashtag/${tag.slice(1, tag.length)}`)
+              navigate(`/hashtag/${tag.slice(1, tag.length )}`)
             }
           >
             <h3>{card.caption}</h3>
@@ -79,10 +178,11 @@ export default function PublishedCards({ card }) {
       </CardContainer>
     );
   }
+
 }
 
 const CardContainer = styled.div`
-  width: 48%;
+  width: 611px;
   height: 276px;
   background-color: #171717;
   margin-top: 30px;
@@ -92,7 +192,30 @@ const CardContainer = styled.div`
   display: flex;
   padding: 16px 22px 18px 9px;
   justify-content: space-between;
+
+
+  @media (max-width: 800px) {
+        width: 100%;
+        height: 232px;
+        border-radius: 0px;
+        justify-content: center;
+
+        & img {
+            width: 0px;
+            height: 0px;
+        }
+    }
+
 `;
+
+const Input = styled.input`
+      background: #FFFFFF;
+      border-radius: 7px;
+      width:84%;
+      text-align: left;
+      min-height: 30px;
+      border-width:0px;
+`
 
 const UserInfo = styled.div`
   width: 12%;
@@ -132,6 +255,9 @@ const UrlInfo = styled.div`
     line-height: 20px;
     color: #b7b7b7;
   }
+  @media (max-width: 800px) {
+        height: 115px;
+    }
 `;
 
 const MetaData = styled.div`
@@ -179,7 +305,15 @@ const MetaData = styled.div`
         border-radius: 11px;
       }
     }
+
+    .dissable {
+      display:none;
+    }
   }
+  @media (max-width: 800px) {
+        width: 100%;
+        height: 115px;
+    }
 `;
 
 const CardHeader = styled.div`
@@ -193,3 +327,14 @@ const CardHeader = styled.div`
     color: #fff;
   }
 `;
+
+const LikeText = styled.div`
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 4px;
+    `

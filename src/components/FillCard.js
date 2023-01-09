@@ -5,6 +5,7 @@ import { useState } from 'react'
 import axios from "axios";
 import swal from "sweetalert";
 import { useAuth } from "../providers/auth";
+import { API_URL } from "../constants/urls";
 
 export default function FillCard() {
     const { token, userimage } = useAuth();
@@ -23,7 +24,7 @@ export default function FillCard() {
   }
 
     function sendPost() {
-		const URLpost = process.env.REACT_APP_API_BASE_URL + '/timeline';
+		const URLpost = `${API_URL}/timeline`;
 		const promise = axios.post(URLpost, form,
             {
                 headers: { Authorization: `Bearer ${token}` },

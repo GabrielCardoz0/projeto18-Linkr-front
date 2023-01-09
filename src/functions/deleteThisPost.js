@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "../constants/urls";
 
 export default async function deleteThisPost(id) {
 
@@ -12,7 +13,7 @@ export default async function deleteThisPost(id) {
         }
     }
 
-    await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/delete-post/${id}` , config)
+    await axios.delete(`${API_URL}/delete-post/${id}` , config)
     .then(res=>{
         postDeleted = true;
     })

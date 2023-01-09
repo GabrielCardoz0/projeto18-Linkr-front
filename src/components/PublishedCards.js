@@ -2,86 +2,138 @@ import styled from "styled-components";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
+import {useState, useRef, useEffect} from "react";
+import { API_URL } from "../constants/urls";
+import axios from "axios";
 
 export default function PublishedCards({ card }) {
- 
+
   const navigate = useNavigate();
+  const [editPost, setEditPost] = useState(false);
+  const [edited, setEdited] = useState('');
+  const [caption, setCaption] = useState(card.caption);
+  const [disabled, setDisabled] = useState(false);
+  const captionRef = useRef(null);
+  
 
+  const postEdit = ()=>{
+    setEditPost(!editPost)
+    setDisabled(false)
+    if(edited){
+      setCaption(edited);
+      
+    } else{
+      setCaption(card.caption);
+    }
+  };
 
+  const keyPress= (e) =>{
+    if(e.code === "Enter"){
+      setDisabled(true)
+      axios.put(`${API_URL}/timeline`,{id:card.id, caption})
+      .then((response)=>{
+        console.log("Su eu:", response.data)
+        setCaption(response.data);
+        setEdited(response.data)
+        setEditPost(!editPost);
+      })
+      .catch(()=>{
+        alert("Não foi possível editar esse post");
+        setCaption(card.caption);
+        setEditPost(!editPost);
+      })
+    } else if(e.code==="Escape"){
+      setEditPost(!editPost)
+      if(edited){
+        setCaption(edited);
+        
+      } else{
+        setCaption(card.caption);
+      }
+      
+    }
+    
+  }
 
-     
-        if (localStorage.getItem("userId") === card.userId) {
-          return (
-            <CardContainer>
-              <UserInfo>
-                <img src={card.pictureUrl} alt="profile"></img>
-                <ion-icon name="heart-outline"></ion-icon>
-              </UserInfo>
+  useEffect(() => {
+    if (editPost) {
+      captionRef.current.focus();
+    }
+  },[editPost]);
 
-              <UrlInfo>
-                <CardHeader>
-                  <h2>{card.username}</h2>
-                  <ul>
-                    <BsTrashFill />
-                    <BsFillPencilFill />
-                  </ul>
-                </CardHeader>
+  
+  if (Number(localStorage.getItem("userId")) === card.userId) {
+    return (
+      <CardContainer>
+        <UserInfo>
+          <img src={card.pictureUrl} alt="profile"></img>
+          <ion-icon name="heart-outline"></ion-icon>
+        </UserInfo>
 
-                <ReactTagify
-                  colors={"#FFFFFF"}
-                  tagClicked={(tag) =>
-                    navigate(`/hashtag/${tag.slice(1, tag.length )}`)
-                  }
-                >
-                  <h3>{card.caption}</h3>
-                </ReactTagify>
+        <UrlInfo>
+          <CardHeader>
+            <h2>{card.username}</h2>
+            <ul>
+              <BsTrashFill />
+              <BsFillPencilFill onClick={postEdit}/>
+            </ul>
+          </CardHeader>
+          {editPost? <Input ref={captionRef} type={"text"} value={caption} onChange={(e) => setCaption(e.target.value)} onKeyDown={(e) => keyPress(e)} disabled={disabled}/>:
+          <ReactTagify
+            colors={"#FFFFFF"}
+            tagClicked={(tag) =>
+              navigate(`/hashtag/${tag.slice(1, tag.length )}`)
+            }
+          >
+            <h3>{caption}</h3>
+          </ReactTagify>}
 
-                <MetaData>
-                  <a href={card.url} target="_blank" rel="noreferrer">
-                    <div>
-                      <h3>{card.title}</h3>
-                      <h5>{card.description}</h5>
-                      <h4>{card.url}</h4>
-                    </div>
-                  </a>
-                  <img src={card.image} alt="link"></img>
-                </MetaData>
-              </UrlInfo>
-            </CardContainer>
-          );
-        } else {
-          return (
-            <CardContainer>
-              <UserInfo>
-                <img src={card.pictureUrl} alt="profile"></img>
-                <ion-icon name="heart-outline"></ion-icon>
-              </UserInfo>
+          <MetaData>
+            <a href={card.url} target="_blank" rel="noreferrer">
+              <div>
+                <h3>{card.title}</h3>
+                <h5 >{card.description}</h5>
+                <h4>{card.url}</h4>
+              </div>
+            </a>
+            <img src={card.image} alt="link"></img>
+          </MetaData>
+        </UrlInfo>
+      </CardContainer>
+    );
+  } else {
+    return (
+      <CardContainer>
+        <UserInfo>
+          <img src={card.pictureUrl} alt="profile"></img>
+          <ion-icon name="heart-outline"></ion-icon>
+        </UserInfo>
 
-              <UrlInfo>
-                <h2>{card.username}</h2>
-                <ReactTagify
-                  colors={"#FFFFFF"}
-                  tagClicked={(tag) =>
-                    navigate(`/hashtag/${tag.slice(1, tag.length )}`)
-                  }
-                >
-                  <h3>{card.caption}</h3>
-                </ReactTagify>
+        <UrlInfo>
+          <h2>{card.username}</h2>
+          <ReactTagify
+            colors={"#FFFFFF"}
+            tagClicked={(tag) =>
+              navigate(`/hashtag/${tag.slice(1, tag.length )}`)
+            }
+          >
+            <h3>{card.caption}</h3>
+          </ReactTagify>
 
-                <MetaData>
-                  <a href={card.url} target="_blank" rel="noreferrer">
-                    <div>
-                      <h3>{card.title}</h3>
-                      <h5>{card.description}</h5>
-                      <h4>{card.url}</h4>
-                    </div>
-                  </a>
-                  <img src={card.image} alt="link"></img>
-                </MetaData>
-              </UrlInfo>
-            </CardContainer>
-          );
-        }
+          <MetaData>
+            <a href={card.url} target="_blank" rel="noreferrer">
+              <div>
+                <h3>{card.title}</h3>
+                <h5>{card.description}</h5>
+                <h4>{card.url}</h4>
+              </div>
+            </a>
+            <img src={card.image} alt="link"></img>
+          </MetaData>
+        </UrlInfo>
+      </CardContainer>
+    );
+  }
       
   
 }
@@ -97,7 +149,17 @@ const CardContainer = styled.div`
   display: flex;
   padding: 16px 22px 18px 9px;
   justify-content: space-between;
+
 `;
+
+const Input = styled.input`
+      background: #FFFFFF;
+      border-radius: 7px;
+      width:503px;
+      text-align: left;
+      min-height: 30px;
+      border-width:0px;
+`
 
 const UserInfo = styled.div`
   width: 12%;
@@ -183,6 +245,10 @@ const MetaData = styled.div`
         height: 100%;
         border-radius: 11px;
       }
+    }
+
+    .dissable {
+      display:none;
     }
   }
 `;

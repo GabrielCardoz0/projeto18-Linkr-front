@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/urls";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../providers/auth";
 
 
 
 export default function TimelinePage() {
-
+    const { token } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -21,7 +22,9 @@ export default function TimelinePage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${API_URL}/timeline`)
+        axios.get(`${API_URL}/timeline`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
         .then((res) => {
            
             setCards(res.data.posts);
@@ -38,7 +41,10 @@ export default function TimelinePage() {
 
     if(loading){
         return(
-            <h1>Loading...</h1>
+            <Load>
+                Loading...
+            </Load>
+            
         )
     }
 
@@ -87,4 +93,13 @@ const Title = styled.div`
         margin-bottom: 19px;
         margin-top: 91px;
     }
+`
+
+const Load = styled.h1`
+    font-family: ${titleFont};
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 30px;
+    color: white;
 `

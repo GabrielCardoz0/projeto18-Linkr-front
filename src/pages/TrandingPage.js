@@ -35,7 +35,9 @@ export default function TrendingPage() {
 
     if(loading){
         return(
-            <h1>Loading...</h1>
+            <Load>
+                Loading...
+            </Load>
         )
     }
 
@@ -83,4 +85,12 @@ const Title = styled.div`
     margin-top: 150px;
     margin-bottom: 43px;
     width: 611px;
+`
+const Load = styled.h1`
+    font-family: ${titleFont};
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 30px;
+    color: white;
 `

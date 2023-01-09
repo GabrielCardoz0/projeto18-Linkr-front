@@ -4,6 +4,7 @@ import { AuthContext } from "../providers/auth";
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
+import { API_URL } from "../constants/urls";
 
 
 export default function SignInForm() {
@@ -28,7 +29,7 @@ export default function SignInForm() {
 
         e.preventDefault();
 
-        const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/signin`, form);
+        const promise = axios.post(`${API_URL}/signin`, form);
 
         setDisabled(true);
 

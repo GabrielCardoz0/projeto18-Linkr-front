@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
 
 export default function TrendingPage() {
-
+    const { token } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -18,7 +18,9 @@ export default function TrendingPage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${baseURL}/hashtag/${hashtag}`)
+        axios.get(`${baseURL}/hashtag/${hashtag}`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
         .then((res) => {
            
             setLoading(false);

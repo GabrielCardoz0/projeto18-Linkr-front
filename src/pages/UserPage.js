@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
 
 export default function UserPage() {
-
+    const { token } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -19,7 +19,9 @@ export default function UserPage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${baseURL}/user/${id}`)
+        axios.get(`${baseURL}/user/${id}`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
         .then((res) => {
             setLoading(false);
             setName(res.data.posts[0].username);

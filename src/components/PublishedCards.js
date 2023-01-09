@@ -23,6 +23,10 @@ export default function PublishedCards({ card }) {
   const [disabled, setDisabled] = useState(false);
   const captionRef = useRef(null);
   
+  const  token = useAuth();
+  const [message, setMessage] = useState('')
+  
+  const [liked, setLiked] = useState(!!card.liked); 
 
   const postEdit = ()=>{
     setEditPost(!editPost)
@@ -70,8 +74,7 @@ export default function PublishedCards({ card }) {
   },[editPost]);
   
 
-  const { token } = useAuth();
-  const [message, setMessage] = useState('')
+
     function getLikes(){
         const URLlikes = `${process.env.REACT_APP_API_BASE_URL}/likes/${card.id}`;
         const promise = axios.get(URLlikes,
@@ -91,12 +94,37 @@ export default function PublishedCards({ card }) {
         })
     }
 
+    function like(id){
+      const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/like/${id}`, {
+        headers:{
+            authorization: `Bearer ${token}`
+        }
+      });
+
+      promise.then(() => setLiked(!liked));
+
+      promise.catch((e) => alert("Erro ao curtir este link. Tente mais tarde."));
+    }
+
+  function dislike(id){
+    const promise = axios.delete(`${process.env.REACT_APP_API_BASE_URL}/dislike/${id}`, {
+      headers:{
+          authorization: `Bearer ${token}`
+      }
+    });
+
+    promise.then(() => setLiked(!liked));
+
+    promise.catch((e) => alert("Erro ao descurtir este link. Tente mais tarde."));
+  }
+
+
   if (Number(localStorage.getItem("userId")) === card.userId) {
     return (
       <CardContainer>
-        <UserInfo>
+        <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
-          <ion-icon name="heart-outline"></ion-icon>
+          <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => liked? dislike(card.id): like(card.id)}></ion-icon>
           <Popup
             trigger={<LikeText onMouseEnter={getLikes} >{card.numberOfLikes} likes
             </LikeText>}
@@ -141,9 +169,9 @@ export default function PublishedCards({ card }) {
   } else {
     return (
       <CardContainer>
-        <UserInfo>
+        <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
-          <ion-icon name="heart-outline"></ion-icon>
+          <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => liked? dislike(card.id): like(card.id)}></ion-icon>
           <Popup
             trigger={<LikeText onMouseEnter={getLikes} >{card.numberOfLikes} likes
             </LikeText>}
@@ -232,7 +260,7 @@ const UserInfo = styled.div`
 
   & ion-icon {
     font-size: 26px;
-    color: #ffffff;
+    color:  ${props => props.color_icon? "#c91313": "#FFFFFF"};;
     margin-top: 12px;
   }
 `;

@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../providers/auth";
-import { API_URL } from "../constants/urls";
 
 
 
@@ -22,7 +21,7 @@ export default function TimelinePage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${API_URL}/timeline`,{
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/timeline`,{
             headers: { Authorization: `Bearer ${token}` },
         })
 
@@ -55,7 +54,7 @@ export default function TimelinePage() {
         <TimelineContainer>
         <Title>timeline</Title>
         <FillCard/>
-        {cards.map((card, i) => {
+        {cards?.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )

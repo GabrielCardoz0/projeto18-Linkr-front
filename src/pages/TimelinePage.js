@@ -6,13 +6,14 @@ import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { baseURL } from "../constants/urls";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../providers/auth";
+import { API_URL } from "../constants/urls";
 
 
 
 export default function TimelinePage() {
-
+    const { token } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -21,7 +22,10 @@ export default function TimelinePage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${baseURL}/timeline`)
+        axios.get(`${API_URL}/timeline`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+
         .then((res) => {
             const { posts, hashtags } = res.data;
             setCards(posts);
@@ -34,11 +38,14 @@ export default function TimelinePage() {
             alert("An error has occurred. Please try again later.");
       
         })
-    }, [hashtag]);
+    }, [hashtag, token]);
 
     if(loading){
         return(
-            <h1>Loading...</h1>
+            <Load>
+                Loading...
+            </Load>
+            
         )
     }
 
@@ -87,4 +94,13 @@ const Title = styled.div`
         margin-bottom: 19px;
         margin-top: 91px;
     }
+`
+
+const Load = styled.h1`
+    font-family: ${titleFont};
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 30px;
+    color: white;
 `

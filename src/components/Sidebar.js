@@ -3,7 +3,8 @@ import{useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import {AuthContext} from '../providers/auth';
 import { useContext } from 'react';
-import { Container, Div} from '../assets/styles/sidebarStyle'
+import { Container, Div} from '../assets/styles/sidebarStyle';
+import { API_URL } from "../constants/urls";
 
 
 
@@ -15,7 +16,7 @@ export const Sidebar = ({ active }) => {
   const logOut = () => {
     
     axios.delete(
-      `${process.env.REACT_APP_API_BASE_URL}/logout`,
+      `${API_URL}/logout`,
       {headers: { authorization: `Bearer ${token}`}}
     ).then(() => {
       setToken('');

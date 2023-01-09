@@ -2,16 +2,73 @@ import styled from "styled-components";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsFillPencilFill } from "react-icons/bs";
+import {useState, useRef, useEffect} from "react";
+import { API_URL } from "../constants/urls";
 import DeleteModal from "./DeleteModal";
+
+import axios from "axios";
 import { useAuth } from "../providers/auth";
 import swal from "sweetalert";
-import axios from "axios";
 import { Popup } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
-import { useState } from "react";
+
+
 
 export default function PublishedCards({ card }) {
+
   const navigate = useNavigate();
+  const [editPost, setEditPost] = useState(false);
+  const [edited, setEdited] = useState('');
+  const [caption, setCaption] = useState(card.caption);
+  const [disabled, setDisabled] = useState(false);
+  const captionRef = useRef(null);
+  
+
+  const postEdit = ()=>{
+    setEditPost(!editPost)
+    setDisabled(false)
+    if(edited){
+      setCaption(edited);
+      
+    } else{
+      setCaption(card.caption);
+    }
+  };
+
+  const keyPress= (e) =>{
+    if(e.code === "Enter"){
+      setDisabled(true)
+      axios.put(`${API_URL}/timeline`,{id:card.id, caption})
+      .then((response)=>{
+        
+        setCaption(response.data);
+        setEdited(response.data)
+        setEditPost(!editPost);
+      })
+      .catch(()=>{
+        alert("Não foi possível editar esse post");
+        setCaption(card.caption);
+        setEditPost(!editPost);
+      })
+    } else if(e.code==="Escape"){
+      setEditPost(!editPost)
+      if(edited){
+        setCaption(edited);
+        
+      } else{
+        setCaption(card.caption);
+      }
+      
+    }
+    
+  }
+
+  useEffect(() => {
+    if (editPost) {
+      captionRef.current.focus();
+    }
+  },[editPost]);
+  
 
   const { token } = useAuth();
   const [message, setMessage] = useState('')
@@ -55,24 +112,24 @@ export default function PublishedCards({ card }) {
             <h2>{card.username}</h2>
             <ul>
               <DeleteModal postId={card.id} />
-              <BsFillPencilFill />
+              <BsFillPencilFill onClick={postEdit}/>
             </ul>
           </CardHeader>
-
+          {editPost? <Input ref={captionRef} type={"text"} value={caption} onChange={(e) => setCaption(e.target.value)} onKeyDown={(e) => keyPress(e)} disabled={disabled}/>:
           <ReactTagify
             colors={"#FFFFFF"}
             tagClicked={(tag) =>
-              navigate(`/hashtag/${tag.slice(1, tag.length)}`)
+              navigate(`/hashtag/${tag.slice(1, tag.length )}`)
             }
           >
-            <h3>{card.caption}</h3>
-          </ReactTagify>
+            <h3>{caption}</h3>
+          </ReactTagify>}
 
           <MetaData>
             <a href={card.url} target="_blank" rel="noreferrer">
               <div>
                 <h3>{card.title}</h3>
-                <h5>{card.description}</h5>
+                <h5 >{card.description}</h5>
                 <h4>{card.url}</h4>
               </div>
             </a>
@@ -101,7 +158,7 @@ export default function PublishedCards({ card }) {
           <ReactTagify
             colors={"#FFFFFF"}
             tagClicked={(tag) =>
-              navigate(`/hashtag/${tag.slice(1, tag.length)}`)
+              navigate(`/hashtag/${tag.slice(1, tag.length )}`)
             }
           >
             <h3>{card.caption}</h3>
@@ -121,6 +178,7 @@ export default function PublishedCards({ card }) {
       </CardContainer>
     );
   }
+
 }
 
 const CardContainer = styled.div`
@@ -135,6 +193,7 @@ const CardContainer = styled.div`
   padding: 16px 22px 18px 9px;
   justify-content: space-between;
 
+
   @media (max-width: 800px) {
         width: 100%;
         height: 232px;
@@ -146,7 +205,17 @@ const CardContainer = styled.div`
             height: 0px;
         }
     }
+
 `;
+
+const Input = styled.input`
+      background: #FFFFFF;
+      border-radius: 7px;
+      width:84%;
+      text-align: left;
+      min-height: 30px;
+      border-width:0px;
+`
 
 const UserInfo = styled.div`
   width: 12%;
@@ -235,6 +304,10 @@ const MetaData = styled.div`
         height: 100%;
         border-radius: 11px;
       }
+    }
+
+    .dissable {
+      display:none;
     }
   }
   @media (max-width: 800px) {

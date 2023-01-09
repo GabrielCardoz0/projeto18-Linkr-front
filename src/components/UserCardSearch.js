@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import { baseFont } from "../constants/fonts";
+import { useNavigate } from "react-router-dom";
 
 export default function UserCardSearch({user}) {
-    
+    const navigate = useNavigate();
     return(
         <>
-        <UserCard>
+        <UserCard onClick={()=>{navigate(`/user/${user.id}`)}}>
             <img src={user.pictureUrl} alt={'user card'}/>
             <p>{user.username}</p>
         </UserCard>

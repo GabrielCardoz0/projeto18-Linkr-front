@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
 import {useState, useRef, useEffect} from "react";
 import { API_URL } from "../constants/urls";
+import DeleteModal from "./DeleteModal";
 import axios from "axios";
+
 
 export default function PublishedCards({ card }) {
 
@@ -60,8 +62,8 @@ export default function PublishedCards({ card }) {
       captionRef.current.focus();
     }
   },[editPost]);
-
   
+
   if (Number(localStorage.getItem("userId")) === card.userId) {
     return (
       <CardContainer>
@@ -74,7 +76,7 @@ export default function PublishedCards({ card }) {
           <CardHeader>
             <h2>{card.username}</h2>
             <ul>
-              <BsTrashFill />
+              <DeleteModal postId={card.id} />
               <BsFillPencilFill onClick={postEdit}/>
             </ul>
           </CardHeader>
@@ -134,8 +136,7 @@ export default function PublishedCards({ card }) {
       </CardContainer>
     );
   }
-      
-  
+
 }
 
 const CardContainer = styled.div`

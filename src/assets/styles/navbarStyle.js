@@ -9,6 +9,7 @@ export const Container = styled.div`
     padding: 20px;
     justify-content: space-between;
     align-items: center;
+    z-index: 1;
     top:0;
     left:0;
     > img {

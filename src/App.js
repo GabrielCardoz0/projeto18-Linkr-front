@@ -6,6 +6,10 @@ import TimelinePage from './pages/TimelinePage';
 import TrandingPage from './pages/TrandingPage';
 import UserPage from './pages/UserPage';
 
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
+
 function App() {
 	return (
 		<>

@@ -6,7 +6,7 @@ import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_URL } from "../constants/urls";
+import { baseURL } from "../constants/urls";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../providers/auth";
 
@@ -25,10 +25,11 @@ export default function TimelinePage() {
         axios.get(`${API_URL}/timeline`,{
             headers: { Authorization: `Bearer ${token}` },
         })
+
         .then((res) => {
-           
-            setCards(res.data.posts);
-            setHashtags(res.data.hashtags);
+            const { posts, hashtags } = res.data;
+            setCards(posts);
+            setHashtags(hashtags);
             setLoading(false);
             return;
         })

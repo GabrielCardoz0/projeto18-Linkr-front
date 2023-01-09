@@ -64,7 +64,7 @@ const TimelineContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    margin-left: 10%;
+    margin-left: 20%;
     padding-bottom: 30px;
 `
 

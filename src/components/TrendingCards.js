@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-
 
 
 export default function TrendingCards({hashtags}) {
@@ -44,6 +42,9 @@ const Container = styled.div`
         margin-left: 12px;
         cursor: pointer;
 
+    }
+    @media (max-width: 800px) {
+        display: none;
     }
 
 `;

@@ -3,9 +3,36 @@ import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsFillPencilFill } from "react-icons/bs";
 import DeleteModal from "./DeleteModal";
+import { useAuth } from "../providers/auth";
+import swal from "sweetalert";
+import axios from "axios";
+import { Popup } from "semantic-ui-react";
+import "semantic-ui-css/semantic.min.css";
+import { useState } from "react";
 
 export default function PublishedCards({ card }) {
   const navigate = useNavigate();
+
+  const { token } = useAuth();
+  const [message, setMessage] = useState('')
+    function getLikes(){
+        const URLlikes = `${process.env.REACT_APP_API_BASE_URL}/likes/${card.id}`;
+        const promise = axios.get(URLlikes,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+            );
+        promise.then((res) => {
+          //console.log(res.data)
+          setMessage(res.data.messageLikes)
+        });
+    
+        promise.catch((err) => {
+          swal({
+            title: "Houve um erro ao mostrar as curtidas",
+          });
+        })
+    }
 
   if (Number(localStorage.getItem("userId")) === card.userId) {
     return (
@@ -13,6 +40,14 @@ export default function PublishedCards({ card }) {
         <UserInfo>
           <img src={card.pictureUrl} alt="profile"></img>
           <ion-icon name="heart-outline"></ion-icon>
+          <Popup
+            trigger={<LikeText onMouseEnter={getLikes} >{card.numberOfLikes} likes
+            </LikeText>}
+            position="bottom center"
+          >
+          {message}
+          </Popup>
+          
         </UserInfo>
 
         <UrlInfo>
@@ -52,6 +87,13 @@ export default function PublishedCards({ card }) {
         <UserInfo>
           <img src={card.pictureUrl} alt="profile"></img>
           <ion-icon name="heart-outline"></ion-icon>
+          <Popup
+            trigger={<LikeText onMouseEnter={getLikes} >{card.numberOfLikes} likes
+            </LikeText>}
+            position="bottom center"
+          >
+          {message}
+          </Popup>
         </UserInfo>
 
         <UrlInfo>
@@ -82,7 +124,7 @@ export default function PublishedCards({ card }) {
 }
 
 const CardContainer = styled.div`
-  width: 48%;
+  width: 611px;
   height: 276px;
   background-color: #171717;
   margin-top: 30px;
@@ -92,6 +134,18 @@ const CardContainer = styled.div`
   display: flex;
   padding: 16px 22px 18px 9px;
   justify-content: space-between;
+
+  @media (max-width: 800px) {
+        width: 100%;
+        height: 232px;
+        border-radius: 0px;
+        justify-content: center;
+
+        & img {
+            width: 0px;
+            height: 0px;
+        }
+    }
 `;
 
 const UserInfo = styled.div`
@@ -132,6 +186,9 @@ const UrlInfo = styled.div`
     line-height: 20px;
     color: #b7b7b7;
   }
+  @media (max-width: 800px) {
+        height: 115px;
+    }
 `;
 
 const MetaData = styled.div`
@@ -180,6 +237,10 @@ const MetaData = styled.div`
       }
     }
   }
+  @media (max-width: 800px) {
+        width: 100%;
+        height: 115px;
+    }
 `;
 
 const CardHeader = styled.div`
@@ -193,3 +254,14 @@ const CardHeader = styled.div`
     color: #fff;
   }
 `;
+
+const LikeText = styled.div`
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 4px;
+    `

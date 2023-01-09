@@ -15,7 +15,7 @@ export const Sidebar = ({ active }) => {
   const logOut = () => {
     
     axios.delete(
-      `http://localhost:5000/logout`,
+      `${process.env.REACT_APP_API_BASE_URL}/logout`,
       {headers: { authorization: `Bearer ${token}`}}
     ).then(() => {
       setToken('');

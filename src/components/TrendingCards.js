@@ -45,6 +45,9 @@ const Container = styled.div`
         cursor: pointer;
 
     }
+    @media (max-width: 800px) {
+        display: none;
+    }
 
 `;
 const Teme = styled.div`

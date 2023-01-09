@@ -6,7 +6,7 @@ import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { baseURL } from "../constants/urls";
+import { baseURL, URL } from "../constants/urls";
 import { useParams } from "react-router-dom";
 
 
@@ -21,7 +21,7 @@ export default function TimelinePage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${baseURL}/timeline`)
+        axios.get(`${URL}/timeline`)
         .then((res) => {
             const { posts, hashtags } = res.data;
             setCards(posts);
@@ -64,7 +64,7 @@ const TimelineContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    margin-left: 10%;
+    margin-left: 20%;
     padding-bottom: 30px;
 `
 

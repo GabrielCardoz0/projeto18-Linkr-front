@@ -66,9 +66,9 @@ export default function TrendingPage() {
 
 const TrendingContainer = styled.div`
     display: flex;
-    width: 100%;
+    width: 80%;
     flex-direction: column;
-    margin-left: 12%;
+    margin-left: 30%;
     padding-bottom: 30px;
     
 `

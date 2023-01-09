@@ -6,9 +6,9 @@ import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { baseURL } from "../constants/urls";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../providers/auth";
+import { API_URL } from "../constants/urls";
 
 
 
@@ -38,7 +38,7 @@ export default function TimelinePage() {
             alert("An error has occurred. Please try again later.");
       
         })
-    }, [hashtag]);
+    }, [hashtag, token]);
 
     if(loading){
         return(

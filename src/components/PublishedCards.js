@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
-import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
+import { BsFillPencilFill } from "react-icons/bs";
 import {useState, useRef, useEffect} from "react";
 import { API_URL } from "../constants/urls";
 import DeleteModal from "./DeleteModal";
@@ -34,7 +34,7 @@ export default function PublishedCards({ card }) {
       setDisabled(true)
       axios.put(`${API_URL}/timeline`,{id:card.id, caption})
       .then((response)=>{
-        console.log("Su eu:", response.data)
+        
         setCaption(response.data);
         setEdited(response.data)
         setEditPost(!editPost);
@@ -156,7 +156,7 @@ const CardContainer = styled.div`
 const Input = styled.input`
       background: #FFFFFF;
       border-radius: 7px;
-      width:503px;
+      width:84%;
       text-align: left;
       min-height: 30px;
       border-width:0px;

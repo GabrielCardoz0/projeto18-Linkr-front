@@ -6,7 +6,7 @@ import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { baseURL, URL } from "../constants/urls";
+import { baseURL } from "../constants/urls";
 import { useParams } from "react-router-dom";
 
 
@@ -21,7 +21,7 @@ export default function TimelinePage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${URL}/timeline`)
+        axios.get(`${baseURL}/timeline`)
         .then((res) => {
             const { posts, hashtags } = res.data;
             setCards(posts);

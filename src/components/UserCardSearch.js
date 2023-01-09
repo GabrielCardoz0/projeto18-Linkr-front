@@ -6,7 +6,7 @@ export default function UserCardSearch({user}) {
     return(
         <>
         <UserCard>
-            <img src={user.pictureUrl}/>
+            <img src={user.pictureUrl} alt={'user card'}/>
             <p>{user.username}</p>
         </UserCard>
         </>     

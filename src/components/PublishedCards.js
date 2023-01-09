@@ -95,7 +95,7 @@ export default function PublishedCards({ card }) {
     }
 
     function like(id){
-      const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/like/${id}`, {} , {
+      const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/like/${id}`, {
         headers:{
             authorization: `Bearer ${token}`
         }
@@ -107,7 +107,7 @@ export default function PublishedCards({ card }) {
     }
 
   function dislike(id){
-    const promise = axios.delete(`${process.env.REACT_APP_API_BASE_URL}/dislike/${id}`, {}, {
+    const promise = axios.delete(`${process.env.REACT_APP_API_BASE_URL}/dislike/${id}`, {
       headers:{
           authorization: `Bearer ${token}`
       }

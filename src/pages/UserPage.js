@@ -7,6 +7,7 @@ import { baseURL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
+import { useAuth } from "../providers/auth";
 
 export default function UserPage() {
     const { token } = useAuth();

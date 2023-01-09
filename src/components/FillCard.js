@@ -1,37 +1,35 @@
-import styled from "styled-components";
-import linkr from "../assets/images/image 4.png";
-import {
-  fillCardTitleColor,
-  inputPost,
-  placeholderColor,
-  publishButtonColor,
-} from "../constants/colors";
+import styled from "styled-components"
+import { fillCardTitleColor, inputPost, placeholderColor, publishButtonColor } from "../constants/colors"
 import { baseFont } from "../constants/fonts";
-import { useState } from "react";
+import { useState } from 'react'
 import axios from "axios";
 import swal from "sweetalert";
-import { URL } from "../constants/urls";
+import { useAuth } from "../providers/auth";
+import { API_URL } from "../constants/urls";
 
 export default function FillCard() {
-  const [form, setForm] = useState({
-    url: "",
-    caption: "",
-  });
-  const [load, setLoad] = useState(false);
+    const { token, userimage } = useAuth();
+    const [form, setForm] = useState({
+		url: '',
+		caption: ''
+	});
+	const [load, setLoad] = useState(false);
 
   function fillForm(e) {
     if (!load) {
       const { name, value } = e.target;
       const formContent = { ...form, [name]: value };
       setForm(formContent);
-      console.log(formContent);
     }
   }
 
-  function sendPost() {
-    const URLpost = URL + "posts";
-    console.log(form);
-    const promise = axios.post(URLpost, form);
+    function sendPost() {
+		const URLpost = `${API_URL}/timeline`;
+		const promise = axios.post(URLpost, form,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+            );
 
     setLoad(true);
 
@@ -48,56 +46,72 @@ export default function FillCard() {
     });
   }
 
-  return (
-    <>
-      <CardContainer>
-        <img src={linkr} alt="user"></img>
-        <AlignBox>
-          <h2>What are you going to share today?</h2>
-          <InputUrl
-            placeholder="http://..."
-            name="url"
-            value={form.url}
-            onChange={fillForm}
-            type="text"
-            disabled={load && true}
-            load={load}
-          />
-          <InputCaption
-            placeholder="Awesome article about #javascript"
-            name="caption"
-            value={form.caption}
-            onChange={fillForm}
-            type="text"
-            disabled={load && true}
-            load={load}
-          />
-          <PublishButton onClick={sendPost}>
-            {load ? "Publishing..." : "Publish"}
-          </PublishButton>
-        </AlignBox>
-      </CardContainer>
-    </>
-  );
+    return(
+        <>
+        <CardContainer>
+            <img src={userimage} alt="user"></img>
+            <AlignBox>
+                <h2>What are you going to share today?</h2>
+                <InputUrl
+                placeholder="http://..."
+                name="url"
+                value={form.url}
+                onChange={fillForm}
+                type="text"
+                disabled={load && true}
+                load={load}
+                />
+                <InputCaption
+                placeholder="Awesome article about #javascript"
+                name="caption"
+                value={form.caption}
+                onChange={fillForm}
+                type="text"
+                disabled={load && true}
+                load={load}
+                />
+                <PublishButton onClick={sendPost}>
+                {load ? (
+						'Publishing...'
+					) : (
+						'Publish'
+					)}
+                </PublishButton>
+            </AlignBox>
+        </CardContainer>
+        </>
+    )
 }
 
 const CardContainer = styled.div`
-  width: 611px;
-  height: 209px;
-  background-color: white;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 16px;
-  box-sizing: border-box;
-  display: flex;
-  padding: 16px 22px 18px 16px;
-  justify-content: space-between;
+    width: 611px;
+    height: 209px;
+    background-color: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    padding: 16px 22px 18px 16px;
+    justify-content: space-between;
+    
+    & img{
+        width: 50px;
+        height: 50px;
+        border-radius: 26.5px;
+    }
 
-  & img {
-    width: 50px;
-    height: 50px;
-    border-radius: 26.5px;
-  }
-`;
+    @media (max-width: 800px) {
+        width: 100%;
+        height: 164px;
+        border-radius: 0px;
+        justify-content: center;
+
+        & img {
+            width: 0px;
+            height: 0px;
+        }
+    }
+`
 const AlignBox = styled.div`
   display: flex;
   width: 503px;
@@ -111,8 +125,18 @@ const AlignBox = styled.div`
     font-size: 20px;
     line-height: 24px;
     color: ${fillCardTitleColor};
-  }
-`;
+
+    @media (max-width: 800px) {
+        width: 100%;
+        text-align: center;
+      & h2{
+            width: 100%;
+            font-size: 17px;
+            line-height: 20px;
+        }
+    }    
+    }
+`
 const InputUrl = styled.input`
   border: none;
   box-sizing: border-box;
@@ -129,10 +153,16 @@ const InputUrl = styled.input`
   margin-bottom: 5px;
   margin-top: 13px;
 
-  ::placeholder {
-    color: ${placeholderColor};
-  }
-`;
+    ::placeholder{
+        color: ${placeholderColor};
+    }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        font-size: 13px;
+        line-height: 16px;
+    } 
+`
 const InputCaption = styled.textarea`
   border: none;
   box-sizing: border-box;
@@ -148,22 +178,33 @@ const InputCaption = styled.textarea`
   line-height: 18px;
   margin-bottom: 5px;
 
-  ::placeholder {
-    color: ${placeholderColor};
-    height: 50px;
-  }
-`;
+    ::placeholder{
+        color: ${placeholderColor};
+        height: 50px;
+    }
+
+    @media (max-width: 800px) {
+        width: 100%;
+        height: 47px;
+        font-size: 13px;
+        line-height: 16px;
+    } 
+`
 const PublishButton = styled.button`
-  width: 112px;
-  height: 31px;
-  text-align: center;
-  color: white;
-  font-family: ${baseFont};
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 17px;
-  background-color: ${publishButtonColor};
-  border: none;
-  border-radius: 5px;
-`;
+    width: 112px;
+    height: 31px;
+    text-align: center;
+    color: white;
+    font-family: ${baseFont};
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    background-color: ${publishButtonColor};
+    border: none;
+    border-radius: 5px;
+
+    @media (max-width: 800px) {
+        height: 22px;
+    } 
+`

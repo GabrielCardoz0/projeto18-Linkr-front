@@ -1,52 +1,16 @@
-import styled from "styled-components";
-import { ReactTagify } from "react-tagify";
-import { AuthContext } from "../providers/auth";
-import { useContext, useState } from "react";
-import axios from "axios";
-import { BsTrashFill, BsFillPencilFill } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+
 
 export default function Card(card){
 
     const token = localStorage.getItem("token")
-    const [liked, setLiked] = useState(!!card.liked); 
     const navigate = useNavigate();
 
-    function like(id){
-        const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/like`, {
-          headers:{
-              authorization: `Bearer ${token}`
-          }, 
-          data: {
-            "postId": id
-          }
-        });
-
-        promise.then(() => setLiked(!liked));
-
-        promise.catch((e) => alert("Erro ao curtir este link. Tente mais tarde."));
-    }
-
-    function dislike(id){
-      const promise = axios.delete(`${process.env.REACT_APP_API_BASE_URL}/dislike`, {
-        headers:{
-            authorization: `Bearer ${token}`
-        }, 
-        data: {
-          "postId": id
-        }
-      });
-
-      promise.then(() => setLiked(!liked));
-
-      promise.catch((e) => alert("Erro ao descurtir este link. Tente mais tarde."));
-  }
-
+    
     return (
         <CardContainer>
         <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
-          <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => liked? like(card.id): dislike(card.id)}></ion-icon>
+          
         </UserInfo>
 
         <UrlInfo>

@@ -1,11 +1,14 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import GlobalStyle from './assets/styles/GlobalStyle';
-import HashtagPage from './pages/HashtagPage';
-import InitialPage from './pages/InitialPage';
 import SignInPage from './pages/signInPage';
 import SignUpPage from './pages/signUpPage';
 import TimelinePage from './pages/TimelinePage';
+import TrandingPage from './pages/TrandingPage';
+import UserPage from './pages/UserPage';
 
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 
 function App() {
 	return (
@@ -13,12 +16,11 @@ function App() {
 			<GlobalStyle />
 			<BrowserRouter>
 				<Routes>
+					<Route path='/user/:id' element={<UserPage />} />
+				    <Route path='/hashtag/:hashtag' element={<TrandingPage/>} /> 
 					<Route path='/timeline' element={<TimelinePage />} />
-					<Route path="/initial-page" element={<InitialPage />} />
 					<Route path='/sign-up' element={ <SignUpPage/> }/>
 					<Route path='/' element={<SignInPage/>} /> 
-					<Route path='/timeline' element={<TimelinePage/>} /> 
-					<Route path='/hashtag/:hashtag' element={<HashtagPage/>} />
 				</Routes>
 			</BrowserRouter>
 		</>

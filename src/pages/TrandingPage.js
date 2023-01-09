@@ -1,17 +1,15 @@
 import styled from "styled-components"
-import FillCard from "../components/FillCard"
 import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
-import { titleFont } from "../constants/fonts"
-import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { baseURL } from "../constants/urls";
+import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
+import Navbar from "../components/Navbar"
 import { useAuth } from "../providers/auth";
 
-
-
-export default function TimelinePage() {
+export default function TrendingPage() {
     const { token } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
@@ -21,61 +19,66 @@ export default function TimelinePage() {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/timeline`,{
+        axios.get(`${baseURL}/hashtag/${hashtag}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
-
         .then((res) => {
-            const { posts, hashtags } = res.data;
-            setCards(posts);
-            setHashtags(hashtags);
+           
             setLoading(false);
+            setCards(res.data.posts);
+            setHashtags(res.data.hashtags);
             return;
         })
         .catch((err) => {
             console.log(err);
-            alert("An error has occurred. Please try again later.");
-      
+            alert("An error has occurred. Please try again later.")
+            return;
         })
-    }, [hashtag, token]);
+    }, [hashtag]);
 
     if(loading){
         return(
             <Load>
                 Loading...
             </Load>
-            
         )
     }
 
     return(
         <>
+   
         <Navbar/>
-        <TimelineContainer>
-        <Title>timeline</Title>
-        <FillCard/>
-        {cards?.map((card, i) => {
+        <TrendingContainer>
+        <Title># {hashtag}</Title>
+       
+        
+        {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        })}
-        <TrendingCards hashtags={hashtags}/>
-        </TimelineContainer>
+        }
+        )}
+          
+                <TrendingCards hashtags={hashtags}/>
+    
+        
+        </TrendingContainer>
+      
         
         </>
     )
 }
 
-const TimelineContainer = styled.div`
+const TrendingContainer = styled.div`
     display: flex;
-    width: 100%;
+    width: 80%;
     flex-direction: column;
-    margin-left: 20%;
+    margin-left: 30%;
     padding-bottom: 30px;
+    
 `
 
 const Title = styled.div`
-    box-sizing: border-box;
     font-family: ${titleFont};
     font-style: normal;
     font-weight: 700;
@@ -85,16 +88,7 @@ const Title = styled.div`
     margin-top: 150px;
     margin-bottom: 43px;
     width: 611px;
-    @media (max-width: 800px) {
-        width: 100%;
-        padding-left: 17px;
-        font-size: 33px;
-        line-height: 49px;
-        margin-bottom: 19px;
-        margin-top: 91px;
-    }
 `
-
 const Load = styled.h1`
     font-family: ${titleFont};
     font-style: normal;

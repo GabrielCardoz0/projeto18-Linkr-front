@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import SignUpForm from "../assets/styles/SignUpForm.style";
+import { API_URL } from "../constants/urls";
 
 export default function SignUpFormComponent() {
 
@@ -24,7 +25,7 @@ export default function SignUpFormComponent() {
     };
 
     axios.post(
-      "https://projeto18-linkr-back.onrender.com/signup",
+      `${API_URL}/signup`,
       user
     )
     .then(() => {

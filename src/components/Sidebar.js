@@ -3,7 +3,7 @@ import{useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import {AuthContext} from '../providers/auth';
 import { useContext } from 'react';
-import { Container, Div} from '../assets/styles/sidebarStyle'
+import { Container, Div} from '../assets/styles/sidebarStyle';
 
 
 
@@ -19,7 +19,7 @@ export const Sidebar = ({ active }) => {
       {headers: { authorization: `Bearer ${token}`}}
     ).then(() => {
       setToken('');
-      localStorage.removeItem('token');
+      localStorage.clear();
       active(false);
       navigate("/");
     }).catch( () =>{

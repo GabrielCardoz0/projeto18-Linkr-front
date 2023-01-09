@@ -4,11 +4,12 @@ import { AuthContext } from "../providers/auth";
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
+import { API_URL } from "../constants/urls";
 
 
 export default function SignInForm() {
 
-    const { setToken } = useContext(AuthContext);
+    const { setToken, setUserimage } = useContext(AuthContext);
     const navigate = useNavigate();
     const [form, setForm] = useState({
         email: '',
@@ -28,16 +29,23 @@ export default function SignInForm() {
 
         e.preventDefault();
 
-        const promise = axios.post(`${process.env.REACT_APP_API_BASE_URL}/signin`, form);
+        const promise = axios.post(`${API_URL}/signin`, form);
 
         setDisabled(true);
 
         promise.then((res) => {
             setToken(res.data.token);
-            console.log(res.data.token);
             localStorage.setItem('userId' , res.data.userId);
+			localStorage.setItem('token', JSON.stringify(res.data.token));
+
+            if(res.data.userImage){
+                setUserimage(res.data.userImage);
+			    localStorage.setItem('userimage', JSON.stringify(res.data.userImage));
+            };
+            
             setDisabled(false);
             navigate("/timeline");
+			
         });
 
         promise.catch((err) => {

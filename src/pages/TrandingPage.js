@@ -13,12 +13,11 @@ export default function TrendingPage() {
     const { token } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { hashtag } = useParams();
 
 
     useEffect(() => {
-        setLoading(true);
         axios.get(`${baseURL}/hashtag/${hashtag}`,{
             headers: { Authorization: `Bearer ${token}` },
         })

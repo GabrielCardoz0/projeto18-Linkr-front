@@ -308,7 +308,7 @@ const MetaData = styled.div`
   border: 1px solid #4f4f4f;
   margin-top: 18px;
   display: flex;
-
+  overflow: hidden;
   & div {
     width: 70%;
     height: 100%;
@@ -339,12 +339,13 @@ const MetaData = styled.div`
       line-height: 13px;
       color: #cecece;
     }
-    & a {
+    & 
       img {
         width: 30%;
         height: 100%;
         border-radius: 11px;
-      }
+        object-fit: cover;
+       
     }
 
     .dissable {

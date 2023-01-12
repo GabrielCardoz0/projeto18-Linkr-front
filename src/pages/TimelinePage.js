@@ -12,6 +12,7 @@ import { API_URL } from "../constants/urls"
 
 
 
+
 export default function TimelinePage() {
     const { token } = useAuth();
     const [cards, setCards] = useState([]);
@@ -21,8 +22,10 @@ export default function TimelinePage() {
     const { hashtag } = useParams();
 
     useEffect(() => {
+
         setLoading(true);
         axios.get(`${API_URL}/timeline`,{
+
             headers: { Authorization: `Bearer ${token}` },
         })
 
@@ -47,14 +50,7 @@ export default function TimelinePage() {
         })
     }, [hashtag, token]);
 
-    if(loading){
-        return(
-            <Load>
-                Loading...
-            </Load>
-            
-        )
-    }
+ 
 
     return(
         <>
@@ -62,6 +58,7 @@ export default function TimelinePage() {
         <TimelineContainer>
         <Title>timeline</Title>
         <FillCard/>
+        <Load>{loading && 'loading...'}</Load>
         {cards?.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>

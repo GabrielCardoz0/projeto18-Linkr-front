@@ -40,6 +40,13 @@ export default function TimelinePage() {
             setHashtags(hashtags);
             setPage(page + 1);
             setLoading(false);
+
+            if(followStatus==="no-post"){
+                setFollowMessage("No posts found from your friends")
+            } else if(followStatus ==="no-follow"){
+                setFollowMessage(`You don't follow anyone yet. Search for new friends!`)
+            }
+
             return;
         })
         .catch((err) => {
@@ -84,8 +91,11 @@ const TimelineContainer = styled.div`
     flex-direction: column;
     margin-left: 20%;
     padding-bottom: 30px;
-`
 
+    @media (max-width: 800px) {
+        margin-left: 0;
+    }
+`
 const Title = styled.div`
     box-sizing: border-box;
     font-family: ${titleFont};
@@ -115,3 +125,29 @@ const Load = styled.h1`
     line-height: 30px;
     color: white;
 `
+
+const Message = styled.div`
+  width: 611px;
+  justify-content: center;
+
+  >h5{
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    margin-top: 100px;
+    color: #6D6D6D;
+    text-align: center;
+  }
+
+  @media (max-width: 800px) {
+        width: 100%;
+        justify-content: center;
+
+        >h5{
+            font-size: 16px;  
+        }
+    }
+
+`;

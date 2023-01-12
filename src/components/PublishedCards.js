@@ -11,10 +11,14 @@ import { useAuth } from "../providers/auth";
 import swal from "sweetalert";
 import { Popup } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
+import Coments from "./coments";
+import ComentsArea from "./ComentsArea";
 
 
 
 export default function PublishedCards({ card }) {
+
+  const [showComents , setShowComents] = useState(false); 
 
   const navigate = useNavigate();
   const [editPost, setEditPost] = useState(false);
@@ -124,6 +128,7 @@ export default function PublishedCards({ card }) {
 
   if (Number(localStorage.getItem("userId")) === card.userId) {
     return (
+      <>
       <CardContainer>
         <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
@@ -136,6 +141,7 @@ export default function PublishedCards({ card }) {
           {message}
           </Popup>
           
+          <Coments showComents={showComents} setShowComents={setShowComents}/>
         </UserInfo>
 
         <UrlInfo>
@@ -168,6 +174,8 @@ export default function PublishedCards({ card }) {
           </MetaData>
         </UrlInfo>
       </CardContainer>
+      <ComentsArea showComents={showComents}/>
+      </>
     );
   } else {
     return (
@@ -182,6 +190,8 @@ export default function PublishedCards({ card }) {
           >
           {message}
           </Popup>
+
+          <Coments showComents={showComents} setShowComents={setShowComents}/>
         </UserInfo>
 
         <UrlInfo>
@@ -211,6 +221,7 @@ export default function PublishedCards({ card }) {
   }
 
 }
+
 
 const CardContainer = styled.div`
   width: 611px;

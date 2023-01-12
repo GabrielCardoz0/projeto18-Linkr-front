@@ -44,7 +44,7 @@ const Container = styled.div`
         cursor: pointer;
 
     }
-    @media (max-width: 800px) {
+    @media (max-width: 1175px) {
         display: none;
     }
 

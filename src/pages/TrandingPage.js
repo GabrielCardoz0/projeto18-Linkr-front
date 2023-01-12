@@ -24,9 +24,19 @@ export default function TrendingPage() {
         })
         .then((res) => {
            
+            setLoading(true);
+            const { posts, hashtags } = res.data;
+            if (posts.length === 0) {
+                setHasMore(false);
+                setLoading(false);
+                return;
+            }
+            setCards(prevCards => {
+                return [...new Set([...prevCards, ...posts])]
+              });
+            setHashtags(hashtags);
+            setPage(page + 1);
             setLoading(false);
-            setCards(res.data.posts);
-            setHashtags(res.data.hashtags);
             return;
         })
         .catch((err) => {

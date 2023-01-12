@@ -31,18 +31,12 @@ export default function TrendingPage() {
         })
         .catch((err) => {
             console.log(err);
-            alert("An error has occurred. Please try again later.")
-            return;
+            alert("An error has occurred. Please try again later.");
+           
         })
     }, [hashtag, token]);
 
-    if(loading){
-        return(
-            <Load>
-                Loading...
-            </Load>
-        )
-    }
+    
 
     return(
         <>
@@ -50,7 +44,7 @@ export default function TrendingPage() {
         <Navbar/>
         <TrendingContainer>
         <Title># {hashtag}</Title>
-       
+       <Load>{loading && 'loading...'}</Load>
         
         {cards.map((card, i) => {
             return(

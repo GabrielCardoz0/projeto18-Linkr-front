@@ -37,12 +37,7 @@ export default function UserPage() {
         })
     }, [token,id]);
 
-    if(loading){
-        return(
-            <h1>Loading...</h1>
-        )
-    }
-
+ 
     return(
         <>
    
@@ -50,7 +45,7 @@ export default function UserPage() {
         <UserContainer>
         <Title>{name}</Title>
        
-        
+        <Load>{loading && 'loading...'}</Load>
         {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
@@ -88,4 +83,12 @@ const Title = styled.div`
     margin-top: 150px;
     margin-bottom: 43px;
     width: 611px;
+`
+const Load = styled.h1`
+    font-family: ${titleFont};
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 30px;
+    color: white;
 `

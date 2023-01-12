@@ -19,6 +19,8 @@ export default function TimelinePage() {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(0);
+    const [followStatus, setFollowStatus] = useState("");
+    const [followMessage, setFollowMessage] = useState("");
 
 
     function loadFunc() {

@@ -8,6 +8,7 @@ import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
 import { useAuth } from "../providers/auth";
+import InfiniteScroll from "react-infinite-scroller";
 
 export default function UserPage() {
     const { token } = useAuth();

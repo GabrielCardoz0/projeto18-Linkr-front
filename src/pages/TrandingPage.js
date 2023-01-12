@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { baseURL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
@@ -15,10 +15,11 @@ export default function TrendingPage() {
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(true);
     const { hashtag } = useParams();
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(0);
 
-
-    useEffect(() => {
-        axios.get(`${baseURL}/hashtag/${hashtag}`,{
+    function loadFunc()  {
+        axios.get(`${baseURL}/hashtag/${hashtag}?page=${page}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -33,7 +34,10 @@ export default function TrendingPage() {
             alert("An error has occurred. Please try again later.");
            
         })
-    }, [hashtag, token]);
+    }
+
+
+ 
 
     
 
@@ -43,15 +47,20 @@ export default function TrendingPage() {
         <Navbar/>
         <TrendingContainer>
         <Title># {hashtag}</Title>
-       <Load>{loading && 'loading...'}</Load>
         
+       <InfiniteScroll
+         pageStart={0}
+         loadMore={loadFunc}
+         dataLength={1}
+         hasMore={hasMore}
+         loader={<Load>{'loading...'}</Load>}
+        >
         {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        }
-        )}
-          
+        })}
+        </InfiniteScroll>
                 <TrendingCards hashtags={hashtags}/>
     
         

@@ -4,11 +4,11 @@ import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
 import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import { useAuth } from "../providers/auth";
 import { baseURL } from "../constants/urls"
+import InfiniteScroll from 'react-infinite-scroller';
 
 
 
@@ -16,19 +16,29 @@ export default function TimelinePage() {
     const { token } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const { hashtag } = useParams();
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(0);
 
 
-    useEffect(() => {
-        axios.get(`${baseURL}/timeline`,{
+    function loadFunc() {
+        axios.get(`${baseURL}/timeline?page=${page}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
 
         .then((res) => {
+            setLoading(true);
             const { posts, hashtags } = res.data;
-            setCards(posts);
+            if (posts.length === 0) {
+                setHasMore(false);
+                setLoading(false);
+                return;
+            }
+            setCards(prevCards => {
+                return [...new Set([...prevCards, ...posts])]
+              });
             setHashtags(hashtags);
+            setPage(page + 1);
             setLoading(false);
             return;
         })
@@ -37,7 +47,8 @@ export default function TimelinePage() {
             alert("An error has occurred. Please try again later.");
       
         })
-    }, [hashtag, token]);
+    }
+
 
  
 
@@ -47,12 +58,19 @@ export default function TimelinePage() {
         <TimelineContainer>
         <Title>timeline</Title>
         <FillCard/>
-        <Load>{loading && 'loading...'}</Load>
-        {cards?.map((card, i) => {
+        <InfiniteScroll
+         pageStart={0}
+         loadMore={loadFunc}
+         dataLength={1}
+         hasMore={hasMore}
+         loader={<Load>{'loading...'}</Load>}
+        >
+        {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )
         })}
+        </InfiniteScroll>
         <TrendingCards hashtags={hashtags}/>
         </TimelineContainer>
         

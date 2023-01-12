@@ -21,12 +21,13 @@ export default function PublishedCards({ card }) {
   const [edited, setEdited] = useState('');
   const [caption, setCaption] = useState(card.caption);
   const [disabled, setDisabled] = useState(false);
+  const [numberOfLikes, setNumberOfLikes] = useState(card.numberOfLikes);
   const captionRef = useRef(null);
   
-  const  token = useAuth();
+  const  token  = useAuth();
   const [message, setMessage] = useState('')
   
-  const [liked, setLiked] = useState(!!card.liked); 
+  const [liked, setLiked] = useState(card.liked); 
 
   const postEdit = ()=>{
     setEditPost(!editPost)
@@ -98,13 +99,19 @@ export default function PublishedCards({ card }) {
     }
 
     function like(id){
-      const promise = axios.post(`${API_URL}/like/${id}`, {
+      const promise = axios.post(`${API_URL}/like/${id}`, 
+      {},
+      {
         headers:{
-            authorization: `Bearer ${token}`
+            authorization: `Bearer ${token.token}`
         }
       });
 
-      promise.then(() => setLiked(!liked));
+      promise.then((res) => {
+        setLiked(!liked);
+        console.log(res.data);
+        setNumberOfLikes(res.data.numberOfLikes);
+      });
 
       promise.catch((e) => alert("Erro ao curtir este link. Tente mais tarde."));
     }
@@ -112,11 +119,14 @@ export default function PublishedCards({ card }) {
   function dislike(id){
     const promise = axios.delete(`${API_URL}/dislike/${id}`, {
       headers:{
-          authorization: `Bearer ${token}`
+          authorization: `Bearer ${token.token}`
       }
     });
 
-    promise.then(() => setLiked(!liked));
+    promise.then((res) => {
+       setLiked(!liked);
+       setNumberOfLikes(res.data.numberOfLikes);
+    });
 
     promise.catch((e) => alert("Erro ao descurtir este link. Tente mais tarde."));
   }
@@ -129,7 +139,7 @@ export default function PublishedCards({ card }) {
           <img src={card.pictureUrl} alt="profile"></img>
           <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => liked? dislike(card.id): like(card.id)}></ion-icon>
           <Popup
-            trigger={<LikeText onMouseEnter={getLikes} >{card.numberOfLikes} likes
+            trigger={<LikeText onMouseEnter={getLikes} >{numberOfLikes} likes
             </LikeText>}
             position="bottom center"
           >
@@ -176,7 +186,7 @@ export default function PublishedCards({ card }) {
           <img src={card.pictureUrl} alt="profile"></img>
           <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => liked? dislike(card.id): like(card.id)}></ion-icon>
           <Popup
-            trigger={<LikeText onMouseEnter={getLikes} >{card.numberOfLikes} likes
+            trigger={<LikeText onMouseEnter={getLikes} > {numberOfLikes} likes
             </LikeText>}
             position="bottom center"
           >

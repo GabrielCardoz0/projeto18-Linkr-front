@@ -1,13 +1,14 @@
 import styled from "styled-components"
 import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { baseURL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
 import { useAuth } from "../providers/auth";
+import InfiniteScroll from "react-infinite-scroller";
 
 export default function TrendingPage() {
     const { token } = useAuth();
@@ -15,25 +16,39 @@ export default function TrendingPage() {
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(true);
     const { hashtag } = useParams();
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(0);
 
-
-    useEffect(() => {
-        axios.get(`${baseURL}/hashtag/${hashtag}`,{
+    function loadFunc()  {
+        axios.get(`${baseURL}/hashtag/${hashtag}?page=${page}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
            
-            setLoading(false);
-            setCards(res.data.posts);
-            setHashtags(res.data.hashtags);
-            return;
+            setLoading(true);
+            const { posts, hashtags } = res.data;
+            if (posts.length !== 0) {
+                setCards([...cards, ...posts]);
+                setHashtags(hashtags);
+                setPage(page+1);
+                setLoading(false);
+                return;
+            }
+            else{
+                setHasMore(false);
+                setLoading(false);
+                setPage(0);
+            }
         })
         .catch((err) => {
             console.log(err);
             alert("An error has occurred. Please try again later.");
            
         })
-    }, [hashtag, token]);
+    }
+
+
+ 
 
     
 
@@ -43,15 +58,20 @@ export default function TrendingPage() {
         <Navbar/>
         <TrendingContainer>
         <Title># {hashtag}</Title>
-       <Load>{loading && 'loading...'}</Load>
         
+       <InfiniteScroll
+         pageStart={0}
+         loadMore={loadFunc}
+         dataLength={1}
+         hasMore={hasMore}
+         loader={<Load>{'loading...'}</Load>}
+        >
         {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        }
-        )}
-          
+        })}
+        </InfiniteScroll>
                 <TrendingCards hashtags={hashtags}/>
     
         

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsFillPencilFill } from "react-icons/bs";
+import { BiRepost } from "react-icons/bi";
 import {useState, useRef, useEffect} from "react";
 import { API_URL } from "../constants/urls";
 import DeleteModal from "./DeleteModal";
@@ -132,6 +133,7 @@ export default function PublishedCards({ card }) {
     promise.catch((e) => alert("Erro ao descurtir este link. Tente mais tarde."));
   }
 
+  const style = { color: "white" , width: "25px", height: "25px"}
 
   if (Number(localStorage.getItem("userId")) === card.userId) {
     return (
@@ -146,7 +148,8 @@ export default function PublishedCards({ card }) {
           >
           {message}
           </Popup>
-          
+          <BiRepost style={style}/>
+          <LikeText>X re-posts</LikeText>
         </UserInfo>
 
         <UrlInfo>
@@ -194,6 +197,7 @@ export default function PublishedCards({ card }) {
           {message}
           </Popup>
           <RepostModal/>
+          <LikeText>X re-posts</LikeText>
         </UserInfo>
 
         <UrlInfo>

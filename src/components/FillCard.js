@@ -93,6 +93,7 @@ const CardContainer = styled.div`
     display: flex;
     padding: 16px 22px 18px 16px;
     justify-content: space-between;
+    margin-bottom: 30px;
     
     & img{
         width: 50px;

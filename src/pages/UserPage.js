@@ -3,13 +3,12 @@ import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { API_URL } from "../constants/urls";
+import { API_URL, baseURL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
 
 import { AuthContext } from "../providers/auth";
-import { baseURL } from "../constants/urls";
 
 import InfiniteScroll from "react-infinite-scroller";
 import { useInterval } from "use-interval";

@@ -14,6 +14,8 @@ export const AuthProvider = (props) => {
 			? JSON.parse(localStorage.getItem('userimage'))
 			: 'https://static.vecteezy.com/system/resources/previews/002/318/271/original/user-profile-icon-free-vector.jpg'
 	);
+	
+	const [shareUsernames, setShareUsernames] = useState([])
 
 	return (
 		<AuthContext.Provider
@@ -21,7 +23,9 @@ export const AuthProvider = (props) => {
 				token,
 				setToken,
 				userimage,
-				setUserimage
+				setUserimage,
+				shareUsernames,
+				setShareUsernames
 			}}
 		>
 			{props.children}

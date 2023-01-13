@@ -39,7 +39,7 @@ export default function UserPage() {
 
 
     useInterval(() => {
-        axios.get(`${baseURL}/user/${id}`,{
+        axios.get(`${API_URL}/user/${id}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {

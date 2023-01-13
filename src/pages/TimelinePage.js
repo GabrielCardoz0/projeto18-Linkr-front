@@ -15,7 +15,7 @@ import { useInterval } from "use-interval";
 
 
 export default function TimelinePage() {
-    const { token } = useAuth();
+    const { token, setShareUsernames } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -25,14 +25,14 @@ export default function TimelinePage() {
     const [followMessage, setFollowMessage] = useState("");
     const [ref, setRef] = useState(null);
     const [newMessage, setNewMessage] = useState(0);
-    const [shareUsernames, setShareUsernames] = useState([])
+    
     
     function refresh(){
         setCards([]);
         setHasMore(true);
         setPage(0);
         setNewMessage(0);
-        
+        setShareUsernames([])
     }
     
     useInterval(() => {
@@ -58,7 +58,7 @@ export default function TimelinePage() {
         })
     }, 15000);
 
-    /* function getReposts() {
+    function getReposts() {
         axios.get(`${baseURL}/reposts`,{
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -68,7 +68,7 @@ export default function TimelinePage() {
             console.log("data", res.data)
         
             if (reposts.length !== 0) {
-                setCards(reposts);
+                setCards([...cards, ...reposts]);
                 setShareUsernames(repostsUsernames)
                 return;
             }
@@ -80,9 +80,10 @@ export default function TimelinePage() {
             alert("An error has occurred. Please try again later.");
       
         })
-    } */
+    } 
 
     function loadFunc() {
+        getReposts()
         axios.get(`${baseURL}/timeline?page=${page}`,{
             headers: { Authorization: `Bearer ${token}` },
         })

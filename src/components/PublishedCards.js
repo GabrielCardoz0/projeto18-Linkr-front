@@ -17,7 +17,7 @@ import RepostModal from "./RepostModal";
 
 
 export default function PublishedCards({ card }) {
-
+  const {shareUsernames} = useAuth()
   const navigate = useNavigate();
   const [editPost, setEditPost] = useState(false);
   const [edited, setEdited] = useState('');
@@ -28,8 +28,13 @@ export default function PublishedCards({ card }) {
   
   const  token  = useAuth();
   const [message, setMessage] = useState('')
-  const userRepost = ''
+  
   const [liked, setLiked] = useState(card.liked); 
+  let userRepost = ''
+  if (card.isRepost){
+    const result = shareUsernames.find( repost => repost.postId === card.id );
+    userRepost = result.repostUsername
+  }
 
   const postEdit = ()=>{
     setEditPost(!editPost)

@@ -12,11 +12,13 @@ import axios from 'axios';
 import swal from 'sweetalert';
 import { DebounceInput } from 'react-debounce-input';
 import UserCardSearch from './UserCardSearch';
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
     const { userimage } = useAuth();
     const [sidebar, setSidebar] = useState(false);
     const [results, setResults] = useState(false);
+    const navigate = useNavigate();
 
     const showSidebar = () => {
         setSidebar(!sidebar);
@@ -67,7 +69,7 @@ function Navbar() {
     
     return (
         <Container>
-            <img src={logo} alt="logo"/>
+            <img src={logo} alt="logo" onClick={()=>{navigate("/timeline")}} style={{cursor: 'pointer'}}/>
             <InputContainer>
                 <DebounceInput
                 debounceTimeout={300}

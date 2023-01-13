@@ -28,9 +28,10 @@ const Container = styled.div`
     border-radius: 16px;
     width: 301px;
     height: 430px;
-    position: absolute;
-    top: 272px;
-    right: 8%;
+    position: fixed;
+    top: 260px;
+    left: 66.5%;
+
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     h3{
         font-family: Lato;

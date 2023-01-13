@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../providers/auth";
-import { baseURL } from "../constants/urls"
+import { API_URL } from "../constants/urls"
 import InfiniteScroll from 'react-infinite-scroller';
 import { BsChevronDoubleLeft } from "react-icons/bs"
 import { useInterval } from "use-interval";
@@ -35,8 +35,9 @@ export default function TimelinePage() {
         setShareUsernames([])
     }
     
+    
     useInterval(() => {
-        axios.get(`${baseURL}/timeline`,{
+        axios.get(`${API_URL}/timeline`,{
             headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -50,6 +51,7 @@ export default function TimelinePage() {
                    
                 })
                 }
+                setFollowStatus(res.data.followStatus)
             }
         )
         .catch((err) => {
@@ -59,7 +61,7 @@ export default function TimelinePage() {
     }, 15000);
 
     function getReposts() {
-        axios.get(`${baseURL}/reposts`,{
+        axios.get(`${API_URL}/reposts`,{
             headers: { Authorization: `Bearer ${token}` },
         })
 
@@ -85,8 +87,7 @@ export default function TimelinePage() {
     useEffect(loadFunc, [])
 
     function loadFunc() {
-        getReposts()
-        axios.get(`${baseURL}/timeline?page=${page}`,{
+        axios.get(`${API_URL}/timeline?page=${page}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
 
@@ -148,8 +149,9 @@ export default function TimelinePage() {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        })}
+        })}         
         </InfiniteScroll>
+        <Message><h5>{followMessage}</h5></Message>
         <TrendingCards hashtags={hashtags}/>
         </TimelineContainer>
         

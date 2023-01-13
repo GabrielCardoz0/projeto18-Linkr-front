@@ -9,6 +9,8 @@ import axios from "axios";
 import { useAuth } from "../providers/auth";
 import { baseURL } from "../constants/urls"
 import InfiniteScroll from 'react-infinite-scroller';
+import { BsChevronDoubleLeft } from "react-icons/bs"
+import { useInterval } from "use-interval";
 
 
 
@@ -21,6 +23,41 @@ export default function TimelinePage() {
     const [page, setPage] = useState(0);
     const [followStatus, setFollowStatus] = useState("");
     const [followMessage, setFollowMessage] = useState("");
+    const [ref, setRef] = useState(null);
+    const [newMessage, setNewMessage] = useState(0);
+
+    function refresh(){
+        setCards([]);
+        setHasMore(true);
+        setPage(0);
+        setNewMessage(0);
+        
+    }
+
+
+    useInterval(() => {
+        axios.get(`${baseURL}/timeline`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+            const { posts} = res.data;
+            if(posts[0].id !== ref){
+                posts.map((post,index) => {
+                    if(post.id === ref){
+                        setNewMessage(newMessage + index);
+                        setRef(posts[0].id);
+                    }
+                   
+                })
+                }
+            }
+        )
+        .catch((err) => {
+            console.log(err);
+            
+        })
+    }, 15000);
+
 
 
     function loadFunc() {
@@ -31,17 +68,22 @@ export default function TimelinePage() {
         .then((res) => {
             setLoading(true);
             const { posts, hashtags } = res.data;
-            if (posts.length === 0) {
-                setHasMore(false);
+            if(page ===0){
+                setRef(posts[0].id);
+            }
+            if (posts.length !== 0) {
+                setCards([...cards, ...posts]);
+                setHashtags(hashtags);
+                setPage(page+1);
                 setLoading(false);
                 return;
             }
-            setCards(prevCards => {
-                return [...new Set([...prevCards, ...posts])]
-              });
-            setHashtags(hashtags);
-            setPage(page + 1);
-            setLoading(false);
+            else{
+                setHasMore(false);
+                setLoading(false);
+                setPage(0);
+            }
+            
 
             if(followStatus==="no-post"){
                 setFollowMessage("No posts found from your friends")
@@ -64,15 +106,18 @@ export default function TimelinePage() {
     return(
         <>
         <Navbar/>
-        <TimelineContainer>
+        <TimelineContainer >
         <Title>timeline</Title>
         <FillCard/>
+      {newMessage > 0 &&  
+      <NewMessages onClick={refresh}>
+            {`You have ${newMessage} new posts!`}
+        </NewMessages>}
         <InfiniteScroll
-         pageStart={0}
-         loadMore={loadFunc}
-         dataLength={1}
-         hasMore={hasMore}
-         loader={<Load>{'loading...'}</Load>}
+        pageStart={0}
+        loadMore={loadFunc}
+        hasMore={hasMore}
+        loader={<Load>{'loading...'}</Load>}
         >
         {cards.map((card, i) => {
             return(
@@ -153,3 +198,23 @@ const Message = styled.div`
     }
 
 `;
+
+const NewMessages = styled.div`
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    width: 611px;
+    height: 61px;
+    background-color: #1877F2;
+    margin-top: 30px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    `

@@ -12,6 +12,7 @@ import { AuthContext } from "../providers/auth";
 
 import InfiniteScroll from "react-infinite-scroller";
 import { useInterval } from "use-interval";
+import { Message } from "semantic-ui-react";
 
 
 export default function UserPage() {
@@ -37,6 +38,19 @@ export default function UserPage() {
         
     }
 
+    useEffect(()=>{
+        axios.get(`${API_URL}/follow/${id}`,{
+            headers: { Authorization: `Bearer ${token}` },
+        }).then((res)=>{
+            console.log("EUUU:",res.data)
+            setFollowing(res.data.followStatus)
+        }
+        ).catch((err)=>{
+            console.log(err)
+        })
+
+        
+    },[id, token]);
 
     useInterval(() => {
         axios.get(`${API_URL}/user/${id}`,{
@@ -53,6 +67,7 @@ export default function UserPage() {
                     }
                 })
                 }
+
             }
         )
         .catch((err) => {
@@ -74,7 +89,7 @@ export default function UserPage() {
         })
         .catch((err) => {
             console.log(err);
-            alert("Não foi possivel deixar de seguir esse usuário. Tente novamente!")
+            alert("Não foi possivel seguir esse usuário. Tente novamente!")
             setDisabled(false)
         
         })
@@ -113,7 +128,6 @@ export default function UserPage() {
             setLoading(false);
             setFollowing(res.data.userFollow);
             setLoading(true);
-            return;
             const { posts, hashtags } = res.data;
             if (posts.length !== 0) {
                 setCards([...cards, ...posts]);
@@ -251,6 +265,15 @@ const Button = styled.button`
 
         position: fixed;
         top:150px;
-        left:80%;
+        right:8%;
         cursor: pointer;
+        @media(max-width: 1200px){
+        right: 5%;
+    }
+    @media(max-width: 1000px){
+        right: 2%;
+    }
+    @media (max-width: 800px) {
+        right: 30px;
+    }
 `

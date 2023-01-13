@@ -167,7 +167,7 @@ export default function PublishedCards({ card }) {
 
         <UrlInfo>
           <CardHeader>
-            <h2>{card.username}</h2>
+            <h2 onClick={()=>{navigate(`/user/${card.userId}`)}}>{card.username}</h2>
             <ul>
               <DeleteModal postId={card.id} />
               <BsFillPencilFill onClick={postEdit}/>
@@ -221,7 +221,7 @@ export default function PublishedCards({ card }) {
         </UserInfo>
 
         <UrlInfo>
-          <h2>{card.username}</h2>
+          <h2  onClick={()=>{navigate(`/user/${card.userId}`)}}>{card.username}</h2>
           <ReactTagify
             colors={"#FFFFFF"}
             tagClicked={(tag) =>
@@ -318,6 +318,7 @@ const UrlInfo = styled.div`
     line-height: 23px;
     color: #ffffff;
     margin-bottom: 8px;
+    cursor: pointer;
   }
   & h3 {
     font-family: Lato;
@@ -398,6 +399,9 @@ const CardHeader = styled.div`
     margin: 0 10px;
     font-size: 20px;
     color: #fff;
+  }
+  >h2{
+    cursor: pointer;
   }
 `;
 

@@ -35,6 +35,7 @@ export default function TimelinePage() {
         setShareUsernames([])
     }
     
+    
     useInterval(() => {
         axios.get(`${baseURL}/timeline`,{
             headers: { Authorization: `Bearer ${token}` },
@@ -50,6 +51,7 @@ export default function TimelinePage() {
                    
                 })
                 }
+                setFollowStatus(res.data.followStatus)
             }
         )
         .catch((err) => {
@@ -147,7 +149,9 @@ export default function TimelinePage() {
                 <PublishedCards key={i} card={card}/>
             )
         })}
+            
         </InfiniteScroll>
+        <Message><h5>{followMessage}</h5></Message>
         <TrendingCards hashtags={hashtags}/>
         </TimelineContainer>
         

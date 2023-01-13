@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
 
 import { AuthContext } from "../providers/auth";
-
+import { baseURL } from "../constants/urls";
 import InfiniteScroll from "react-infinite-scroller";
 import { useInterval } from "use-interval";
 

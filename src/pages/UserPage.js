@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
-import {  useState, useContext } from "react";
+import {  useState, useContext, useEffect} from "react";
 import axios from "axios";
 import { API_URL, baseURL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
@@ -12,6 +12,7 @@ import { AuthContext } from "../providers/auth";
 
 import InfiniteScroll from "react-infinite-scroller";
 import { useInterval } from "use-interval";
+import { Message } from "semantic-ui-react";
 
 
 export default function UserPage() {
@@ -37,6 +38,19 @@ export default function UserPage() {
         
     }
 
+    useEffect(()=>{
+        axios.get(`${API_URL}/follow/${id}`,{
+            headers: { Authorization: `Bearer ${token}` },
+        }).then((res)=>{
+            console.log("EUUU:",res.data)
+            setFollowing(res.data.followStatus)
+        }
+        ).catch((err)=>{
+            console.log(err)
+        })
+
+        
+    },[id, token]);
 
     useInterval(() => {
         axios.get(`${API_URL}/user/${id}`,{
@@ -53,6 +67,7 @@ export default function UserPage() {
                     }
                 })
                 }
+
             }
         )
         .catch((err) => {
@@ -74,7 +89,7 @@ export default function UserPage() {
         })
         .catch((err) => {
             console.log(err);
-            alert("Não foi possivel deixar de seguir esse usuário. Tente novamente!")
+            alert("Não foi possivel seguir esse usuário. Tente novamente!")
             setDisabled(false)
         
         })
@@ -252,7 +267,7 @@ const Button = styled.button`
 
         position: fixed;
         top:150px;
-        left:80%;
+        right:8%;
         cursor: pointer;
 
         @media (max-width: 800px) {

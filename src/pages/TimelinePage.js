@@ -35,8 +35,9 @@ export default function TimelinePage() {
         setShareUsernames([])
     }
     
+    
     useInterval(() => {
-        axios.get(`${baseURL}/timeline`,{
+        axios.get(`${API_URL}/timeline`,{
             headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -50,6 +51,7 @@ export default function TimelinePage() {
                    
                 })
                 }
+                setFollowStatus(res.data.followStatus)
             }
         )
         .catch((err) => {
@@ -59,7 +61,7 @@ export default function TimelinePage() {
     }, 15000);
 
     function getReposts() {
-        axios.get(`${baseURL}/reposts`,{
+        axios.get(`${API_URL}/reposts`,{
             headers: { Authorization: `Bearer ${token}` },
         })
 
@@ -145,9 +147,9 @@ export default function TimelinePage() {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        })}
-        <Message><h5>{followMessage}</h5></Message>
+        })}         
         </InfiniteScroll>
+        <Message><h5>{followMessage}</h5></Message>
         <TrendingCards hashtags={hashtags}/>
         </TimelineContainer>
         

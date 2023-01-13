@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsFillPencilFill } from "react-icons/bs";
+import { BiRepost } from "react-icons/bi";
 import {useState, useRef, useEffect} from "react";
 import { API_URL } from "../constants/urls";
 import DeleteModal from "./DeleteModal";
@@ -11,11 +12,12 @@ import { useAuth } from "../providers/auth";
 import swal from "sweetalert";
 import { Popup } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
+import RepostModal from "./RepostModal";
 
 
 
 export default function PublishedCards({ card }) {
-
+  const {shareUsernames} = useAuth()
   const navigate = useNavigate();
   const [editPost, setEditPost] = useState(false);
   const [edited, setEdited] = useState('');
@@ -28,6 +30,11 @@ export default function PublishedCards({ card }) {
   const [message, setMessage] = useState('')
   
   const [liked, setLiked] = useState(card.liked); 
+  let userRepost = ''
+  if (card.isRepost){
+    const result = shareUsernames.find( repost => repost.postId === card.id );
+    userRepost = result.repostUsername
+  }
 
   const postEdit = ()=>{
     setEditPost(!editPost)
@@ -131,9 +138,18 @@ export default function PublishedCards({ card }) {
     promise.catch((e) => alert("Erro ao descurtir este link. Tente mais tarde."));
   }
 
+  const style = { color: "white" , width: "25px", height: "25px"}
+  const style2 = { color: "white" , width: "20px", height: "20px"}
 
   if (Number(localStorage.getItem("userId")) === card.userId) {
-    return (
+    return ( <>
+      { card.isRepost &&
+          <RepostContainer>
+            <BiRepost style={style2}/>
+            <p>Reposted by {userRepost}</p>
+          </RepostContainer>
+          
+        }
       <CardContainer>
         <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
@@ -145,7 +161,8 @@ export default function PublishedCards({ card }) {
           >
           {message}
           </Popup>
-          
+          <BiRepost style={style}/>
+          <LikeText>{card.numberOfShares} re-posts</LikeText>
         </UserInfo>
 
         <UrlInfo>
@@ -178,9 +195,16 @@ export default function PublishedCards({ card }) {
           </MetaData>
         </UrlInfo>
       </CardContainer>
-    );
+      </>);
   } else {
-    return (
+    return (<>
+    { card.isRepost &&
+          <RepostContainer>
+            <BiRepost style={style2}/>
+            <p>Reposted by {userRepost}</p>
+          </RepostContainer>
+          
+        }
       <CardContainer>
         <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
@@ -192,6 +216,8 @@ export default function PublishedCards({ card }) {
           >
           {message}
           </Popup>
+          <RepostModal postId={card.id} />
+          <LikeText>{card.numberOfShares} re-posts</LikeText>
         </UserInfo>
 
         <UrlInfo>
@@ -217,7 +243,7 @@ export default function PublishedCards({ card }) {
           </MetaData>
         </UrlInfo>
       </CardContainer>
-    );
+    </>);
   }
 
 }
@@ -226,7 +252,7 @@ const CardContainer = styled.div`
   width: 611px;
   height: 276px;
   background-color: #171717;
-  margin-top: 30px;
+  margin-bottom: 30px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   box-sizing: border-box;
@@ -234,6 +260,10 @@ const CardContainer = styled.div`
   padding: 16px 22px 18px 9px;
   justify-content: space-between;
 
+  @media(max-width: 900px){
+        width: 60%;
+    }
+  
 
   @media (max-width: 800px) {
         width: 100%;
@@ -355,7 +385,8 @@ const MetaData = styled.div`
   @media (max-width: 800px) {
         width: 100%;
         height: 115px;
-    }
+  }
+    
 `;
 
 const CardHeader = styled.div`
@@ -384,3 +415,25 @@ const LikeText = styled.div`
     color: #FFFFFF;
     margin: 4px;
     `
+
+const RepostContainer = styled.div`
+  box-sizing: border-box;
+  width: 611px;
+  height: 35px;
+  background: #1E1E1E;
+  border-radius: 16px;
+  padding: 13px;
+  display: flex;
+  align-items: center;
+  & p{
+    font-family: 'Lato';
+    margin-left: 7px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    color: #FFFFFF;
+
+  }
+
+`

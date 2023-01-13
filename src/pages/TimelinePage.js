@@ -10,11 +10,12 @@ import { useAuth } from "../providers/auth";
 import { API_URL } from "../constants/urls"
 import InfiniteScroll from 'react-infinite-scroller';
 import { BsChevronDoubleLeft } from "react-icons/bs"
+import { useInterval } from "use-interval";
 
 
 
 export default function TimelinePage() {
-    const { token } = useAuth();
+    const { token, setShareUsernames } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -22,7 +23,64 @@ export default function TimelinePage() {
     const [page, setPage] = useState(0);
     const [followStatus, setFollowStatus] = useState("");
     const [followMessage, setFollowMessage] = useState("");
+    const [ref, setRef] = useState(null);
+    const [newMessage, setNewMessage] = useState(0);
+    
+    
+    function refresh(){
+        setCards([]);
+        setHasMore(true);
+        setPage(0);
+        setNewMessage(0);
+        setShareUsernames([])
+    }
+    
+    useInterval(() => {
+        axios.get(`${baseURL}/timeline`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+            const { posts} = res.data;
+            if(posts[0].id !== ref){
+                posts.map((post,index) => {
+                    if(post.id === ref){
+                        setNewMessage(newMessage + index);
+                        setRef(posts[0].id);
+                    }
+                   
+                })
+                }
+            }
+        )
+        .catch((err) => {
+            console.log(err);
+            
+        })
+    }, 15000);
 
+    function getReposts() {
+        axios.get(`${baseURL}/reposts`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+
+        .then((res) => {
+            const { repostsUsernames, reposts } = res.data;
+            console.log("data", res.data)
+        
+            if (reposts.length !== 0) {
+                setCards([...cards, ...reposts]);
+                setShareUsernames(repostsUsernames)
+                return;
+            }
+            
+            return;
+        })
+        .catch((err) => {
+            console.log(err);
+            alert("Error trying to get");
+      
+        })
+    } 
 
     function loadFunc() {
         axios.get(`${API_URL}/timeline?page=${page}`,{
@@ -32,6 +90,9 @@ export default function TimelinePage() {
         .then((res) => {
             setLoading(true);
             const { posts, hashtags } = res.data;
+            if(page ===0){
+                setRef(posts[0].id);
+            }
             if (posts.length !== 0) {
                 setCards([...cards, ...posts]);
                 setHashtags(hashtags);
@@ -70,11 +131,15 @@ export default function TimelinePage() {
         <TimelineContainer >
         <Title>timeline</Title>
         <FillCard/>
+      {newMessage > 0 &&  
+      <NewMessages onClick={refresh}>
+            {`You have ${newMessage} new posts!`}
+        </NewMessages>}
         <InfiniteScroll
         pageStart={0}
         loadMore={loadFunc}
         hasMore={hasMore}
-        loader={<Load>{'loading...'}</Load>}
+        loader={<Load>{'loading posts...'}</Load>}
         >
         {cards.map((card, i) => {
             return(
@@ -94,12 +159,18 @@ const TimelineContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    margin-left: 20%;
+    margin-left: 8%;
     padding-bottom: 30px;
-
+    @media(max-width: 1200px){
+        margin-left: 5%;
+    }
+    @media(max-width: 1000px){
+        margin-left: 2%;
+    }
     @media (max-width: 800px) {
         margin-left: 0;
     }
+
 `
 const Title = styled.div`
     box-sizing: border-box;
@@ -123,12 +194,13 @@ const Title = styled.div`
 `
 
 const Load = styled.h1`
-    font-family: ${titleFont};
-    font-style: normal;
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 30px;
-    color: white;
+   font-family: Lato;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 26px;
+    letter-spacing: 0.05em;
+    color: #6D6D6D;
+
 `
 
 const Message = styled.div`
@@ -156,3 +228,23 @@ const Message = styled.div`
     }
 
 `;
+
+const NewMessages = styled.div`
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    width: 611px;
+    height: 61px;
+    background-color: #1877F2;
+    margin-top: 30px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    `

@@ -93,13 +93,17 @@ const CardContainer = styled.div`
     display: flex;
     padding: 16px 22px 18px 16px;
     justify-content: space-between;
+    margin-bottom: 30px;
     
     & img{
         width: 50px;
         height: 50px;
         border-radius: 26.5px;
     }
-
+    @media(max-width: 900px){
+        width: 60%;
+    }
+  
     @media (max-width: 800px) {
         width: 100%;
         height: 164px;
@@ -156,7 +160,11 @@ const InputUrl = styled.input`
     ::placeholder{
         color: ${placeholderColor};
     }
-
+    @media(max-width: 900px){
+        width: 82%;
+        align-self: center;
+     
+    }
     @media (max-width: 800px) {
         width: 100%;
         font-size: 13px;
@@ -182,10 +190,14 @@ const InputCaption = styled.textarea`
         color: ${placeholderColor};
         height: 50px;
     }
-
+    @media(max-width: 900px){
+        width: 82%;
+        align-self: center;
+        
+     
+    }
     @media (max-width: 800px) {
         width: 100%;
-        height: 47px;
         font-size: 13px;
         line-height: 16px;
     } 
@@ -204,7 +216,11 @@ const PublishButton = styled.button`
     border: none;
     border-radius: 5px;
 
-    @media (max-width: 800px) {
+    @media(max-width: 900px){
+        margin-right: 20%;
+    }
+
+    @media (min-width: 800px) {
         height: 22px;
     } 
 `

@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
 import { useAuth } from "../providers/auth";
 import InfiniteScroll from "react-infinite-scroller";
+import { useInterval } from "use-interval";
+
 
 export default function TrendingPage() {
     const { token } = useAuth();
@@ -18,6 +20,40 @@ export default function TrendingPage() {
     const { hashtag } = useParams();
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(0);
+    const [ref, setRef] = useState(null);
+    const [newMessage, setNewMessage] = useState(0);
+
+    function refresh(){
+        setCards([]);
+        setHasMore(true);
+        setPage(0);
+        setNewMessage(0);
+        
+    }
+
+
+    useInterval(() => {
+        axios.get(`${baseURL}/hashtag/${hashtag}`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+            const { posts} = res.data;
+            if(posts[0].id !== ref){
+                posts.map((post,index) => {
+                    if(post.id === ref){
+                        setNewMessage(newMessage + index);
+                        setRef(posts[0].id);
+                        return;
+                    }
+                })
+                }
+            }
+        )
+        .catch((err) => {
+            console.log(err);
+            
+        })
+    }, 15000);
 
     function loadFunc()  {
         axios.get(`${baseURL}/hashtag/${hashtag}?page=${page}`,{
@@ -58,13 +94,16 @@ export default function TrendingPage() {
         <Navbar/>
         <TrendingContainer>
         <Title># {hashtag}</Title>
-        
+        {newMessage > 0 &&  
+      <NewMessages onClick={refresh}>
+            {`You have ${newMessage} new posts!`}
+        </NewMessages>}
        <InfiniteScroll
          pageStart={0}
          loadMore={loadFunc}
          dataLength={1}
          hasMore={hasMore}
-         loader={<Load>{'loading...'}</Load>}
+         loader={<Load>{'loading posts...'}</Load>}
         >
         {cards.map((card, i) => {
             return(
@@ -88,6 +127,17 @@ const TrendingContainer = styled.div`
     flex-direction: column;
     margin-left: 30%;
     padding-bottom: 30px;
+
+    @media(max-width: 1200px){
+        margin-left: 5%;
+    }
+    @media(max-width: 1000px){
+        margin-left: 2%;
+    }
+    @media (max-width: 800px) {
+        margin-left: 0;
+        width: 100%;
+    }
     
 `
 
@@ -103,10 +153,30 @@ const Title = styled.div`
     width: 611px;
 `
 const Load = styled.h1`
-    font-family: ${titleFont};
-    font-style: normal;
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 30px;
-    color: white;
+   font-family: Lato;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 26px;
+    letter-spacing: 0.05em;
+    color: #6D6D6D;
+
 `
+const NewMessages = styled.div`
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    width: 611px;
+    height: 61px;
+    background-color: #1877F2;
+    margin-top: 30px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    `

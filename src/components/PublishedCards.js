@@ -11,6 +11,7 @@ import { useAuth } from "../providers/auth";
 import swal from "sweetalert";
 import { Popup } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
+import RepostModal from "./RepostModal";
 
 
 
@@ -192,6 +193,7 @@ export default function PublishedCards({ card }) {
           >
           {message}
           </Popup>
+          <RepostModal/>
         </UserInfo>
 
         <UrlInfo>

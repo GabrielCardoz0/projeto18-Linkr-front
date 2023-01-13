@@ -127,6 +127,17 @@ const TrendingContainer = styled.div`
     flex-direction: column;
     margin-left: 30%;
     padding-bottom: 30px;
+
+    @media(max-width: 1200px){
+        margin-left: 5%;
+    }
+    @media(max-width: 1000px){
+        margin-left: 2%;
+    }
+    @media (max-width: 800px) {
+        margin-left: 0;
+        width: 100%;
+    }
     
 `
 

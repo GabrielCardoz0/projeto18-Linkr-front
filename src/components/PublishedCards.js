@@ -234,6 +234,10 @@ const CardContainer = styled.div`
   padding: 16px 22px 18px 9px;
   justify-content: space-between;
 
+  @media(max-width: 900px){
+        width: 60%;
+    }
+  
 
   @media (max-width: 800px) {
         width: 100%;
@@ -355,7 +359,8 @@ const MetaData = styled.div`
   @media (max-width: 800px) {
         width: 100%;
         height: 115px;
-    }
+  }
+    
 `;
 
 const CardHeader = styled.div`

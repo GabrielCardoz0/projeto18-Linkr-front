@@ -136,6 +136,7 @@ const TrendingContainer = styled.div`
     }
     @media (max-width: 800px) {
         margin-left: 0;
+        width: 100%;
     }
     
 `

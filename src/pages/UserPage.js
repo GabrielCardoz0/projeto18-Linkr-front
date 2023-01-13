@@ -7,7 +7,11 @@ import { API_URL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar"
+
 import { AuthContext } from "../providers/auth";
+
+import InfiniteScroll from "react-infinite-scroller";
+
 
 export default function UserPage() {
     const { token } = useContext(AuthContext);;
@@ -19,7 +23,8 @@ export default function UserPage() {
     const [following, setFollowing] = useState('');
     const[disabled, setDisabled] = useState(false)
     const { id } = useParams();
-
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(0);
     
     const followUser= ()=>{
         setDisabled(true)
@@ -60,9 +65,9 @@ export default function UserPage() {
             setDisabled(false)
         
         })
-    }
-    useEffect(() => {
-        axios.get(`${API_URL}/user/${id}`,{
+    };
+    function loadFunc() {
+        axios.get(`${baseURL}/user/${id}?page=${page}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -71,15 +76,30 @@ export default function UserPage() {
             setCards(res.data.posts);
             setHashtags(res.data.hashtags);
             setLoading(false);
-            setFollowing(res.data.userFollow)
+            setFollowing(res.data.userFollow);
+            setLoading(true);
             return;
+            const { posts, hashtags } = res.data;
+            if (posts.length !== 0) {
+                setCards([...cards, ...posts]);
+                setHashtags(hashtags);
+                setPage(page+1);
+                setLoading(false);
+                return;
+            }
+            else{
+                setHasMore(false);
+                setLoading(false);
+                setPage(0);
+                return;
+            }
         })
         .catch((err) => {
             console.log(err);
             alert("An error has occurred. Please try again later.")
         
         })
-    }, [token,id]);
+    }
 
 
  
@@ -89,14 +109,20 @@ export default function UserPage() {
         <Navbar/>
         <UserContainer>
         <Title>{name}</Title>
-       
-        <Load>{loading && 'loading...'}</Load>
+    
+        <InfiniteScroll
+         pageStart={0}
+         loadMore={loadFunc}
+         dataLength={1}
+         hasMore={hasMore}
+         loader={<Load>{'loading...'}</Load>}
+        >
         {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        }
-        )}
+        })}
+        </InfiniteScroll>
           
         <TrendingCards hashtags={hashtags}/>
         {

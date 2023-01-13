@@ -1,9 +1,8 @@
 import styled from "styled-components"
 import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
-import { useEffect, useEffect, useState, useContext, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { API_URL } from "../constants/urls";
 import { API_URL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
 import { useParams } from "react-router-dom";
@@ -17,8 +16,6 @@ import { useInterval } from "use-interval";
 
 
 export default function UserPage() {
-    const { token } = useContext(AuthContext);;
-    console.log("token:",token)
     const { token } = useContext(AuthContext);;
     console.log("token:",token)
     const [cards, setCards] = useState([]);
@@ -111,12 +108,7 @@ export default function UserPage() {
         })
         .then((res) => {
             console.log(res.data)
-            console.log(res.data)
             setName(res.data.posts[0].username);
-            setCards(res.data.posts);
-            setHashtags(res.data.hashtags);
-            setLoading(false);
-            setFollowing(res.data.userFollow);
             setCards(res.data.posts);
             setHashtags(res.data.hashtags);
             setLoading(false);
@@ -153,10 +145,6 @@ export default function UserPage() {
         <Navbar/>
         <UserContainer>
         <Title>{name}</Title>
-        {newMessage > 0 &&  
-      <NewMessages onClick={refresh}>
-            {`You have ${newMessage} new posts!`}
-        </NewMessages>}
         {newMessage > 0 &&  
       <NewMessages onClick={refresh}>
             {`You have ${newMessage} new posts!`}
@@ -205,17 +193,6 @@ const UserContainer = styled.div`
     }
 
     
-
-    .unfollowButton{
-        background-color:#FFFFFF;
-        color:#1877F2;
-    }
-    .followButton{
-        background-color:#1877F2;
-        color:#FFFFFF;
-    }
-
-    
 `
 
 const Title = styled.div`
@@ -236,36 +213,6 @@ const Load = styled.h1`
     font-size: 30px;
     line-height: 30px;
     color: white;
-`
-const NewMessages = styled.div`
-    font-family: "Lato";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 22px;
-    line-height: 30px;
-    width: 611px;
-    height: 61px;
-    background-color: #1877F2;
-    margin-top: 30px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 16px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-
-    `
-const Button = styled.button`
-        border-width: 0;
-        border-radius: 5px;
-        height:31px ;
-        width:112px;
-
-        position: fixed;
-        top:150px;
-        left:80%;
-        cursor: pointer;
 `
 const NewMessages = styled.div`
     font-family: "Lato";

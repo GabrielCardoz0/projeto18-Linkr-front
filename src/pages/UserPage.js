@@ -11,6 +11,7 @@ import Navbar from "../components/Navbar"
 import { AuthContext } from "../providers/auth";
 
 import InfiniteScroll from "react-infinite-scroller";
+import { useInterval } from "use-interval";
 
 
 export default function UserPage() {
@@ -25,6 +26,40 @@ export default function UserPage() {
     const { id } = useParams();
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(0);
+    const [ref, setRef] = useState(null);
+    const [newMessage, setNewMessage] = useState(0);
+
+    function refresh(){
+        setCards([]);
+        setHasMore(true);
+        setPage(0);
+        setNewMessage(0);
+        
+    }
+
+
+    useInterval(() => {
+        axios.get(`${API_URL}/user/${id}`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+            const { posts} = res.data;
+            if(posts[0].id !== ref){
+                posts.map((post,index) => {
+                    if(post.id === ref){
+                        setNewMessage(newMessage + index);
+                        setRef(posts[0].id);
+                        return;
+                    }
+                })
+                }
+            }
+        )
+        .catch((err) => {
+            console.log(err);
+            
+        })
+    }, 15000);
     
     const followUser= ()=>{
         setDisabled(true)
@@ -109,7 +144,10 @@ export default function UserPage() {
         <Navbar/>
         <UserContainer>
         <Title>{name}</Title>
-    
+        {newMessage > 0 &&  
+      <NewMessages onClick={refresh}>
+            {`You have ${newMessage} new posts!`}
+        </NewMessages>}
         <InfiniteScroll
          pageStart={0}
          loadMore={loadFunc}
@@ -175,6 +213,25 @@ const Load = styled.h1`
     line-height: 30px;
     color: white;
 `
+const NewMessages = styled.div`
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    width: 611px;
+    height: 61px;
+    background-color: #1877F2;
+    margin-top: 30px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    `
 const Button = styled.button`
         border-width: 0;
         border-radius: 5px;

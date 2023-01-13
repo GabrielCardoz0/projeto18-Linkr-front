@@ -10,6 +10,7 @@ import { useAuth } from "../providers/auth";
 import { baseURL } from "../constants/urls"
 import InfiniteScroll from 'react-infinite-scroller';
 import { BsChevronDoubleLeft } from "react-icons/bs"
+import { useInterval } from "use-interval";
 
 
 
@@ -22,6 +23,41 @@ export default function TimelinePage() {
     const [page, setPage] = useState(0);
     const [followStatus, setFollowStatus] = useState("");
     const [followMessage, setFollowMessage] = useState("");
+    const [ref, setRef] = useState(null);
+    const [newMessage, setNewMessage] = useState(0);
+
+    function refresh(){
+        setCards([]);
+        setHasMore(true);
+        setPage(0);
+        setNewMessage(0);
+        
+    }
+
+
+    useInterval(() => {
+        axios.get(`${baseURL}/timeline`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+            const { posts} = res.data;
+            if(posts[0].id !== ref){
+                posts.map((post,index) => {
+                    if(post.id === ref){
+                        setNewMessage(newMessage + index);
+                        setRef(posts[0].id);
+                    }
+                   
+                })
+                }
+            }
+        )
+        .catch((err) => {
+            console.log(err);
+            
+        })
+    }, 15000);
+
 
 
     function loadFunc() {
@@ -32,6 +68,9 @@ export default function TimelinePage() {
         .then((res) => {
             setLoading(true);
             const { posts, hashtags } = res.data;
+            if(page ===0){
+                setRef(posts[0].id);
+            }
             if (posts.length !== 0) {
                 setCards([...cards, ...posts]);
                 setHashtags(hashtags);
@@ -70,6 +109,10 @@ export default function TimelinePage() {
         <TimelineContainer >
         <Title>timeline</Title>
         <FillCard/>
+      {newMessage > 0 &&  
+      <NewMessages onClick={refresh}>
+            {`You have ${newMessage} new posts!`}
+        </NewMessages>}
         <InfiniteScroll
         pageStart={0}
         loadMore={loadFunc}
@@ -155,3 +198,23 @@ const Message = styled.div`
     }
 
 `;
+
+const NewMessages = styled.div`
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    width: 611px;
+    height: 61px;
+    background-color: #1877F2;
+    margin-top: 30px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    `

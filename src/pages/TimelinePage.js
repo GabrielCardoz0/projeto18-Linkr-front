@@ -117,7 +117,7 @@ export default function TimelinePage() {
         pageStart={0}
         loadMore={loadFunc}
         hasMore={hasMore}
-        loader={<Load>{'loading...'}</Load>}
+        loader={<Load>{'loading posts...'}</Load>}
         >
         {cards.map((card, i) => {
             return(
@@ -171,12 +171,13 @@ const Title = styled.div`
 `
 
 const Load = styled.h1`
-    font-family: ${titleFont};
-    font-style: normal;
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 30px;
-    color: white;
+   font-family: Lato;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 26px;
+    letter-spacing: 0.05em;
+    color: #6D6D6D;
+
 `
 
 const Message = styled.div`

@@ -77,7 +77,7 @@ export default function TimelinePage() {
         })
         .catch((err) => {
             console.log(err);
-            alert("An error has occurred. Please try again later.");
+            alert("Error trying to get");
       
         })
     } 

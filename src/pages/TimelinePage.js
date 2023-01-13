@@ -136,12 +136,18 @@ const TimelineContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    margin-left: 20%;
+    margin-left: 8%;
     padding-bottom: 30px;
-
+    @media(max-width: 1200px){
+        margin-left: 5%;
+    }
+    @media(max-width: 1000px){
+        margin-left: 2%;
+    }
     @media (max-width: 800px) {
         margin-left: 0;
     }
+
 `
 const Title = styled.div`
     box-sizing: border-box;

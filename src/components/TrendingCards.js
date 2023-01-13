@@ -27,10 +27,11 @@ const Container = styled.div`
     background-color: #171717;
     border-radius: 16px;
     width: 301px;
-    height: 406px;
-    position: absolute;
-    margin-top: 272px;
-    margin-left: 54%;
+    height: 430px;
+    position: fixed;
+    top: 260px;
+    left: 66.5%;
+
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     h3{
         font-family: Lato;
@@ -44,9 +45,16 @@ const Container = styled.div`
         cursor: pointer;
 
     }
-    @media (max-width: 1175px) {
+    @media(max-width: 1200px){
+        right: 5%;
+    }
+    @media(max-width: 1000px){
+        right: 2%;
+    }
+    @media (max-width: 800px) {
         display: none;
     }
+
 
 `;
 const Teme = styled.div`

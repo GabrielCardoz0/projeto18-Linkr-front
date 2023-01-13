@@ -4,32 +4,116 @@ import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
 import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import { useAuth } from "../providers/auth";
+import { API_URL } from "../constants/urls"
+import InfiniteScroll from 'react-infinite-scroller';
+import { useInterval } from "use-interval";
 
 
 
 export default function TimelinePage() {
-    const { token } = useAuth();
+    const { token, setShareUsernames } = useAuth();
     const [cards, setCards] = useState([]);
     const [hashtags, setHashtags] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { hashtag } = useParams();
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(0);
+    const [followStatus, setFollowStatus] = useState("");
+    const [followMessage, setFollowMessage] = useState("");
+    const [ref, setRef] = useState(null);
+    const [newMessage, setNewMessage] = useState(0);
+    
+    
+    function refresh(){
+        setCards([]);
+        setHasMore(true);
+        setPage(0);
+        setNewMessage(0);
+        setShareUsernames([])
+    }
+    
+    
+    useInterval(() => {
+        axios.get(`${API_URL}/timeline`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+            const { posts} = res.data;
+            if(posts[0].id !== ref){
+                posts.map((post,index) => {
+                    if(post.id === ref){
+                        setNewMessage(newMessage + index);
+                        setRef(posts[0].id);
+                    }
+                   
+                })
+                }
+                setFollowStatus(res.data.followStatus)
+            }
+        )
+        .catch((err) => {
+            console.log(err);
+            
+        })
+    }, 15000);
 
-
-    useEffect(() => {
-        setLoading(true);
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/timeline`,{
+    function getReposts() {
+        axios.get(`${API_URL}/reposts`,{
             headers: { Authorization: `Bearer ${token}` },
         })
 
         .then((res) => {
+            const { repostsUsernames, reposts } = res.data;
+            console.log("data", res.data)
+        
+            if (reposts.length !== 0) {
+                setCards([...cards, ...reposts]);
+                setShareUsernames(repostsUsernames)
+                return;
+            }
+            
+            return;
+        })
+        .catch((err) => {
+            console.log(err);
+            alert("Error trying to get");
+      
+        })
+    } 
+
+    function loadFunc() {
+        axios.get(`${API_URL}/timeline?page=${page}`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
+
+        .then((res) => {
+            setLoading(true);
             const { posts, hashtags } = res.data;
-            setCards(posts);
-            setHashtags(hashtags);
-            setLoading(false);
+            if(page ===0){
+                setRef(posts[0].id);
+            }
+            if (posts.length !== 0) {
+                setCards([...cards, ...posts]);
+                setHashtags(hashtags);
+                setPage(page+1);
+                setLoading(false);
+                return;
+            }
+            else{
+                setHasMore(false);
+                setLoading(false);
+                setPage(0);
+            }
+            
+
+            if(followStatus==="no-post"){
+                setFollowMessage("No posts found from your friends")
+            } else if(followStatus ==="no-follow"){
+                setFollowMessage(`You don't follow anyone yet. Search for new friends!`)
+            }
+
             return;
         })
         .catch((err) => {
@@ -37,28 +121,34 @@ export default function TimelinePage() {
             alert("An error has occurred. Please try again later.");
       
         })
-    }, [hashtag, token]);
-
-    if(loading){
-        return(
-            <Load>
-                Loading...
-            </Load>
-            
-        )
     }
+
+
+ 
 
     return(
         <>
         <Navbar/>
-        <TimelineContainer>
+        <TimelineContainer >
         <Title>timeline</Title>
         <FillCard/>
-        {cards?.map((card, i) => {
+      {newMessage > 0 &&  
+      <NewMessages onClick={refresh}>
+            {`You have ${newMessage} new posts!`}
+        </NewMessages>}
+        <InfiniteScroll
+        pageStart={0}
+        loadMore={loadFunc}
+        hasMore={hasMore}
+        loader={<Load>{'loading posts...'}</Load>}
+        >
+        {cards.map((card, i) => {
             return(
                 <PublishedCards key={i} card={card}/>
             )
-        })}
+        })}         
+        </InfiniteScroll>
+        <Message><h5>{followMessage}</h5></Message>
         <TrendingCards hashtags={hashtags}/>
         </TimelineContainer>
         
@@ -70,10 +160,19 @@ const TimelineContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    margin-left: 20%;
+    margin-left: 8%;
     padding-bottom: 30px;
-`
+    @media(max-width: 1200px){
+        margin-left: 5%;
+    }
+    @media(max-width: 1000px){
+        margin-left: 2%;
+    }
+    @media (max-width: 800px) {
+        margin-left: 0;
+    }
 
+`
 const Title = styled.div`
     box-sizing: border-box;
     font-family: ${titleFont};
@@ -96,10 +195,57 @@ const Title = styled.div`
 `
 
 const Load = styled.h1`
-    font-family: ${titleFont};
-    font-style: normal;
-    font-weight: 700;
-    font-size: 30px;
-    line-height: 30px;
-    color: white;
+   font-family: Lato;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 26px;
+    letter-spacing: 0.05em;
+    color: #6D6D6D;
+
 `
+
+const Message = styled.div`
+  width: 611px;
+  justify-content: center;
+
+  >h5{
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    margin-top: 100px;
+    color: #6D6D6D;
+    text-align: center;
+  }
+
+  @media (max-width: 800px) {
+        width: 100%;
+        justify-content: center;
+
+        >h5{
+            font-size: 16px;  
+        }
+    }
+
+`;
+
+const NewMessages = styled.div`
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 30px;
+    width: 611px;
+    height: 61px;
+    background-color: #1877F2;
+    margin-top: 30px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    `

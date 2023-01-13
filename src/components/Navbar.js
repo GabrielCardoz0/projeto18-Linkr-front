@@ -12,37 +12,46 @@ import axios from 'axios';
 import swal from 'sweetalert';
 import { DebounceInput } from 'react-debounce-input';
 import UserCardSearch from './UserCardSearch';
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
     const { userimage } = useAuth();
     const [sidebar, setSidebar] = useState(false);
     const [results, setResults] = useState(false);
+    const navigate = useNavigate();
 
     const showSidebar = () => {
         setSidebar(!sidebar);
     }
 
+    const { token } = useAuth();
+    
     const [form, setForm] = useState({
 		username: '',
 	});
     const [users, setUsers] = useState({})
-  function fillForm(e) {
-      const { name, value } = e.target;
-      const formContent = { ...form, [name]: value };
-      setForm(formContent);
-      
-      if (formContent.username.length >= 3){
-        searchUsernames()
-    } else {
-        setResults(false)
+
+    function fillForm(e) {
+        const { name, value } = e.target;
+        const formContent = { ...form, [name]: value };
+        setForm(formContent);
+        
+        if (formContent.username.length >= 3){
+            searchUsernames()
+        } else {
+            setResults(false)
+        }
     }
-  }
 
     function searchUsernames() {
         
         const URLsearch = process.env.REACT_APP_API_BASE_URL + '/usersearch/' + form.username;
         console.log(URLsearch)
-        const promise = axios.get(URLsearch);
+        const promise = axios.get(URLsearch, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        });
 
         promise.then((res) => {
         setUsers(res.data);
@@ -60,7 +69,7 @@ function Navbar() {
     
     return (
         <Container>
-            <img src={logo} alt="logo"/>
+            <img src={logo} alt="logo" onClick={()=>{navigate("/timeline")}} style={{cursor: 'pointer'}}/>
             <InputContainer>
                 <DebounceInput
                 debounceTimeout={300}
@@ -74,13 +83,15 @@ function Navbar() {
                 <IconContainer>
                     <AiOutlineSearch style={{color: 'gray', height: '22px', width: '22px'}}/>
                 </IconContainer>
-            </InputContainer>
-            { results &&
+                { results &&
             <ResultsContainer>
-                {users.map((user) => <UserCardSearch key={user.id} user={user}></UserCardSearch>)}
+                {users.followedUsers.map((user) => <UserCardSearch key={user.id} user={user} following={true}></UserCardSearch>)}
+                {users.OtherUsers.map((user) => <UserCardSearch key={user.id} user={user} following={false}></UserCardSearch>)}
             </ResultsContainer>
             
             }
+            </InputContainer>
+           
             <Div onClick={showSidebar}>
                 {sidebar? <FiChevronDown></FiChevronDown>:<FiChevronRight ></FiChevronRight>
                 }
@@ -129,8 +140,11 @@ const ResultsContainer = styled.div`
     box-sizing: border-box;
     position: absolute;
     width: 563px;
-    left: 626px;
-    top: 58px;
+    top: 45px;
     background: #E7E7E7;
     border-radius: 8px;
+
+    @media (max-width: 800px) {
+        width: 300px;
+    }
 `

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Coments = styled.div`
   width:611px;
-  height:300px;
+  max-height:300px;
   background-color:#1e1e1e;
   position:relative;
   padding:20px;
@@ -31,6 +31,7 @@ const Coments = styled.div`
         border-radius:8px;
         border:none;
         margin-left:15px;
+        color: #fff;
     }
     svg{
         font-size:24px;
@@ -40,8 +41,9 @@ const Coments = styled.div`
   }
 
   ul{
-    height:210px;
+    max-height:210px;
     overflow-y:scroll;
+    margin-bottom:60px;
     img{
         width:39px;
         height:39px;

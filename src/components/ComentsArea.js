@@ -2,57 +2,68 @@ import Coments from "../assets/styles/ComentsStyle";
 import { BsFillCursorFill } from "react-icons/bs";
 import React, { useEffect } from "react";
 import axios from "axios";
+import { API_URL } from "../constants/urls";
+import createComment from "../functions/createComment";
 
 export default function ComentsArea(params) {
-  const { showComents } = params;
+  const { showComents, card } = params;
 
-  useEffect(()=>{
+  const userId = Number(localStorage.getItem("userId"));
+
+  const [commentsList, setCommentsList] = React.useState([]);
+  const [writeComment, setWriteComment] = React.useState("");
+
+  useEffect(() => {
     if (showComents) {
-      axios.get('http://localhost:5000/comments/12')
-    .then(res => {
-      setCommentsList(res.data);
-      console.log('veio:' ,res.data);
-    })
-    .catch(err => {
-        console.log('num veio:' ,err.response.data);
-    });
+      axios
+        .get(`${API_URL}/comments/${card.id}`)
+        .then((res) => {
+          setCommentsList(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
     }
-  } ,[])
+  }, [showComents]);
 
-  const [commentsList , setCommentsList] = React.useState([]);
-
-  
 
   if (showComents) {
     return (
       <>
         <Coments>
           <ul>
-            {commentsList.map(() => {
-             return(
-              <li>
-              <img
-                src="https://hypescience.com/wp-content/uploads/2012/11/filhote-super-fofo.jpg"
-                alt="userImage"
-              />
-              <div className="comment">
-                <h1>
-                  Usuário <span> • following</span>
-                </h1>
-                <p>essimo</p>
-              </div>
-            </li>
-             )
+            {commentsList.map((comment) => {
+              return (
+                <li>
+                  <img src={comment.pictureUrl} alt="userImage" />
+                  <div className="comment">
+                    <h1>
+                      {comment.username}
+                      <span>
+                        {comment.userId === userId
+                          ? "• post's author"
+                          : "• following"}
+                      </span>
+                    </h1>
+                    <p>{comment.comment}</p>
+                  </div>
+                </li>
+              );
             })}
           </ul>
-          
+
           <div className="inputContainer">
-            <img
-              src="https://hypescience.com/wp-content/uploads/2012/11/filhote-super-fofo.jpg"
-              alt="userImage"
+            <img src={card.pictureUrl} alt="userImage" />
+            <input
+              type={"text"}
+              placeholder="write a comment..."
+              onChange={(e) => setWriteComment(e.target.value)}
+              value={writeComment}
             />
-            <input type={"text"} placeholder="write a comment..." />
-            <BsFillCursorFill />
+            <BsFillCursorFill onClick={()=> {
+              createComment(writeComment , card.id,commentsList,setCommentsList);
+              setWriteComment('');
+            }}/>
           </div>
         </Coments>
       </>
@@ -60,4 +71,4 @@ export default function ComentsArea(params) {
   } else {
     return "";
   }
-}
+};

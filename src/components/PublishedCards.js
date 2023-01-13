@@ -28,7 +28,7 @@ export default function PublishedCards({ card }) {
   
   const  token  = useAuth();
   const [message, setMessage] = useState('')
-  
+  const userRepost = ''
   const [liked, setLiked] = useState(card.liked); 
 
   const postEdit = ()=>{
@@ -134,9 +134,17 @@ export default function PublishedCards({ card }) {
   }
 
   const style = { color: "white" , width: "25px", height: "25px"}
+  const style2 = { color: "white" , width: "20px", height: "20px"}
 
   if (Number(localStorage.getItem("userId")) === card.userId) {
-    return (
+    return ( <>
+      { card.isRepost &&
+          <RepostContainer>
+            <BiRepost style={style2}/>
+            <p>Reposted by {userRepost}</p>
+          </RepostContainer>
+          
+        }
       <CardContainer>
         <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
@@ -149,7 +157,7 @@ export default function PublishedCards({ card }) {
           {message}
           </Popup>
           <BiRepost style={style}/>
-          <LikeText>X re-posts</LikeText>
+          <LikeText>{card.numberOfShares} re-posts</LikeText>
         </UserInfo>
 
         <UrlInfo>
@@ -182,9 +190,16 @@ export default function PublishedCards({ card }) {
           </MetaData>
         </UrlInfo>
       </CardContainer>
-    );
+      </>);
   } else {
-    return (
+    return (<>
+    { card.isRepost &&
+          <RepostContainer>
+            <BiRepost style={style2}/>
+            <p>Reposted by {userRepost}</p>
+          </RepostContainer>
+          
+        }
       <CardContainer>
         <UserInfo color_icon={liked}>
           <img src={card.pictureUrl} alt="profile"></img>
@@ -196,8 +211,8 @@ export default function PublishedCards({ card }) {
           >
           {message}
           </Popup>
-          <RepostModal/>
-          <LikeText>X re-posts</LikeText>
+          <RepostModal postId={card.id} />
+          <LikeText>{card.numberOfShares} re-posts</LikeText>
         </UserInfo>
 
         <UrlInfo>
@@ -223,7 +238,7 @@ export default function PublishedCards({ card }) {
           </MetaData>
         </UrlInfo>
       </CardContainer>
-    );
+    </>);
   }
 
 }
@@ -232,7 +247,7 @@ const CardContainer = styled.div`
   width: 611px;
   height: 276px;
   background-color: #171717;
-  margin-top: 30px;
+  margin-bottom: 30px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   box-sizing: border-box;
@@ -386,3 +401,25 @@ const LikeText = styled.div`
     color: #FFFFFF;
     margin: 4px;
     `
+
+const RepostContainer = styled.div`
+  box-sizing: border-box;
+  width: 611px;
+  height: 35px;
+  background: #1E1E1E;
+  border-radius: 16px;
+  padding: 13px;
+  display: flex;
+  align-items: center;
+  & p{
+    font-family: 'Lato';
+    margin-left: 7px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    color: #FFFFFF;
+
+  }
+
+`

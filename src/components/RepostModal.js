@@ -27,7 +27,8 @@ export default function RepostModal(params) {
     async function repostPost(){
         const verification = await repostThisPost(params.postId);
 
-        if(verification) alert('Post repostado com sucesso');
+        if(verification) {alert('Post repostado com sucesso');
+        window.location.reload(false);}
 
         if(!verification) alert('Não foi possível repostar o post, tente novamente mais tarde');
         setModalOpen(false);

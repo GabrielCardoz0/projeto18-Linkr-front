@@ -25,7 +25,8 @@ export default function TimelinePage() {
     const [followMessage, setFollowMessage] = useState("");
     const [ref, setRef] = useState(null);
     const [newMessage, setNewMessage] = useState(0);
-
+    const [shareUsernames, setShareUsernames] = useState([])
+    
     function refresh(){
         setCards([]);
         setHasMore(true);
@@ -33,8 +34,7 @@ export default function TimelinePage() {
         setNewMessage(0);
         
     }
-
-
+    
     useInterval(() => {
         axios.get(`${baseURL}/timeline`,{
             headers: { Authorization: `Bearer ${token}` },
@@ -58,7 +58,29 @@ export default function TimelinePage() {
         })
     }, 15000);
 
+    /* function getReposts() {
+        axios.get(`${baseURL}/reposts`,{
+            headers: { Authorization: `Bearer ${token}` },
+        })
 
+        .then((res) => {
+            const { repostsUsernames, reposts } = res.data;
+            console.log("data", res.data)
+        
+            if (reposts.length !== 0) {
+                setCards(reposts);
+                setShareUsernames(repostsUsernames)
+                return;
+            }
+            
+            return;
+        })
+        .catch((err) => {
+            console.log(err);
+            alert("An error has occurred. Please try again later.");
+      
+        })
+    } */
 
     function loadFunc() {
         axios.get(`${baseURL}/timeline?page=${page}`,{

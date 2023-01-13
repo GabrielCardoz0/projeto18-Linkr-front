@@ -174,7 +174,7 @@ export default function PublishedCards({ card }) {
           </MetaData>
         </UrlInfo>
       </CardContainer>
-      <ComentsArea showComents={showComents}/>
+      <ComentsArea showComents={showComents} card={card}/>
       </>
     );
   } else {

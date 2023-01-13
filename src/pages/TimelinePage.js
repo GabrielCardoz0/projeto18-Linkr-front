@@ -4,12 +4,11 @@ import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
 import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../providers/auth";
 import { API_URL } from "../constants/urls"
 import InfiniteScroll from 'react-infinite-scroller';
-import { BsChevronDoubleLeft } from "react-icons/bs"
 import { useInterval } from "use-interval";
 
 
@@ -83,8 +82,6 @@ export default function TimelinePage() {
       
         })
     } 
-
-    useEffect(loadFunc, [])
 
     function loadFunc() {
         axios.get(`${API_URL}/timeline?page=${page}`,{

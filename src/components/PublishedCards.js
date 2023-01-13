@@ -3,7 +3,7 @@ import { ReactTagify } from "react-tagify";
 import { useNavigate } from "react-router-dom";
 import { BsFillPencilFill } from "react-icons/bs";
 import { BiRepost } from "react-icons/bi";
-import {useState, useRef, useEffect} from "react";
+import { useState, useRef, useEffect } from "react";
 import { API_URL } from "../constants/urls";
 import DeleteModal from "./DeleteModal";
 
@@ -12,240 +12,283 @@ import { useAuth } from "../providers/auth";
 import swal from "sweetalert";
 import { Popup } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
+import Coments from "./coments";
+import ComentsArea from "./ComentsArea";
 import RepostModal from "./RepostModal";
 
-
-
 export default function PublishedCards({ card }) {
-  const {shareUsernames} = useAuth()
+  const [showComents, setShowComents] = useState(false);
+  const { shareUsernames } = useAuth();
   const navigate = useNavigate();
   const [editPost, setEditPost] = useState(false);
-  const [edited, setEdited] = useState('');
+  const [edited, setEdited] = useState("");
   const [caption, setCaption] = useState(card.caption);
   const [disabled, setDisabled] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(card.numberOfLikes);
   const captionRef = useRef(null);
-  
-  const  token  = useAuth();
-  const [message, setMessage] = useState('')
-  
-  const [liked, setLiked] = useState(card.liked); 
-  let userRepost = ''
-  if (card.isRepost){
-    const result = shareUsernames.find( repost => repost.postId === card.id );
-    userRepost = result.repostUsername
+
+  const token = useAuth();
+  const [message, setMessage] = useState("");
+
+  const [liked, setLiked] = useState(card.liked);
+  let userRepost = "";
+  if (card.isRepost) {
+    const result = shareUsernames.find((repost) => repost.postId === card.id);
+    userRepost = result.repostUsername;
   }
 
-  const postEdit = ()=>{
-    setEditPost(!editPost)
-    setDisabled(false)
-    if(edited){
+  const postEdit = () => {
+    setEditPost(!editPost);
+    setDisabled(false);
+    if (edited) {
       setCaption(edited);
-      
-    } else{
+    } else {
       setCaption(card.caption);
     }
   };
 
-  const keyPress= (e) =>{
-    if(e.code === "Enter"){
-      setDisabled(true)
-      axios.put(`${API_URL}/timeline`,{id:card.id, caption})
-      .then((response)=>{
-        
-        setCaption(response.data);
-        setEdited(response.data)
-        setEditPost(!editPost);
-      })
-      .catch(()=>{
-        alert("Não foi possível editar esse post");
-        setCaption(card.caption);
-        setEditPost(!editPost);
-      })
-    } else if(e.code==="Escape"){
-      setEditPost(!editPost)
-      if(edited){
+  const keyPress = (e) => {
+    if (e.code === "Enter") {
+      setDisabled(true);
+      axios
+        .put(`${API_URL}/timeline`, { id: card.id, caption })
+        .then((response) => {
+          setCaption(response.data);
+          setEdited(response.data);
+          setEditPost(!editPost);
+        })
+        .catch(() => {
+          alert("Não foi possível editar esse post");
+          setCaption(card.caption);
+          setEditPost(!editPost);
+        });
+    } else if (e.code === "Escape") {
+      setEditPost(!editPost);
+      if (edited) {
         setCaption(edited);
-        
-      } else{
+      } else {
         setCaption(card.caption);
       }
-      
     }
-    
-  }
+  };
 
   useEffect(() => {
     if (editPost) {
       captionRef.current.focus();
     }
-  },[editPost]);
-  
+  }, [editPost]);
 
-
-    function getLikes(){
- 
-        const URLlikes = `${API_URL}/likes/${card.id}`;
-        const promise = axios.get(URLlikes,
-            {
-                headers: { Authorization: `Bearer ${token.token}` },
-            }
-            );
-            
-        promise.then((res) => {
-          console.log(res.data)
-          
-          setMessage(res.data.messageLikes)
-        });
-    
-        promise.catch((err) => {
-          swal({
-            title: "Houve um erro ao mostrar as curtidas",
-          });
-        })
-    }
-
-    function like(id){
-      const promise = axios.post(`${API_URL}/like/${id}`, 
-      {},
-      {
-        headers:{
-            authorization: `Bearer ${token.token}`
-        }
-      });
-
-      promise.then((res) => {
-        setLiked(!liked);
-        console.log(res.data);
-        setNumberOfLikes(res.data.numberOfLikes);
-      });
-
-      promise.catch((e) => alert("Erro ao curtir este link. Tente mais tarde."));
-    }
-
-  function dislike(id){
-    const promise = axios.delete(`${API_URL}/dislike/${id}`, {
-      headers:{
-          authorization: `Bearer ${token.token}`
-      }
+  function getLikes() {
+    const URLlikes = `${API_URL}/likes/${card.id}`;
+    const promise = axios.get(URLlikes, {
+      headers: { Authorization: `Bearer ${token.token}` },
     });
 
     promise.then((res) => {
-       setLiked(!liked);
-       setNumberOfLikes(res.data.numberOfLikes);
+      console.log(res.data);
+
+      setMessage(res.data.messageLikes);
     });
 
-    promise.catch((e) => alert("Erro ao descurtir este link. Tente mais tarde."));
+    promise.catch((err) => {
+      swal({
+        title: "Houve um erro ao mostrar as curtidas",
+      });
+    });
   }
 
-  const style = { color: "white" , width: "25px", height: "25px"}
-  const style2 = { color: "white" , width: "20px", height: "20px"}
+  function like(id) {
+    const promise = axios.post(
+      `${API_URL}/like/${id}`,
+      {},
+      {
+        headers: {
+          authorization: `Bearer ${token.token}`,
+        },
+      }
+    );
+
+    promise.then((res) => {
+      setLiked(!liked);
+      console.log(res.data);
+      setNumberOfLikes(res.data.numberOfLikes);
+    });
+
+    promise.catch((e) => alert("Erro ao curtir este link. Tente mais tarde."));
+  }
+
+  function dislike(id) {
+    const promise = axios.delete(`${API_URL}/dislike/${id}`, {
+      headers: {
+        authorization: `Bearer ${token.token}`,
+      },
+    });
+
+    promise.then((res) => {
+      setLiked(!liked);
+      setNumberOfLikes(res.data.numberOfLikes);
+    });
+
+    promise.catch((e) =>
+      alert("Erro ao descurtir este link. Tente mais tarde.")
+    );
+  }
+
+  const style = { color: "white", width: "25px", height: "25px" };
+  const style2 = { color: "white", width: "20px", height: "20px" };
 
   if (Number(localStorage.getItem("userId")) === card.userId) {
-    return ( <>
-      { card.isRepost &&
+    return (
+      <>
+        {card.isRepost && (
           <RepostContainer>
-            <BiRepost style={style2}/>
+            <BiRepost style={style2} />
             <p>Reposted by {userRepost}</p>
           </RepostContainer>
-          
-        }
-      <CardContainer>
-        <UserInfo color_icon={liked}>
-          <img src={card.pictureUrl} alt="profile"></img>
-          <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => liked? dislike(card.id): like(card.id)}></ion-icon>
-          <Popup
-            trigger={<LikeText onMouseEnter={getLikes} >{numberOfLikes} likes
-            </LikeText>}
-            position="bottom center"
-          >
-          {message}
-          </Popup>
-          <BiRepost style={style}/>
-          <LikeText>{card.numberOfShares} re-posts</LikeText>
-        </UserInfo>
+        )}
+        <CardContainer>
+          <UserInfo color_icon={liked}>
+            <img src={card.pictureUrl} alt="profile"></img>
+            <ion-icon
+              name={liked ? "heart-sharp" : "heart-outline"}
+              onClick={() => (liked ? dislike(card.id) : like(card.id))}
+            ></ion-icon>
+            <Popup
+              trigger={
+                <LikeText onMouseEnter={getLikes}>
+                  {numberOfLikes} likes
+                </LikeText>
+              }
+              position="bottom center"
+            >
+              {message}
+            </Popup>
 
-        <UrlInfo>
-          <CardHeader>
-            <h2 onClick={()=>{navigate(`/user/${card.userId}`)}}>{card.username}</h2>
-            <ul>
-              <DeleteModal postId={card.id} />
-              <BsFillPencilFill onClick={postEdit}/>
-            </ul>
-          </CardHeader>
-          {editPost? <Input ref={captionRef} type={"text"} value={caption} onChange={(e) => setCaption(e.target.value)} onKeyDown={(e) => keyPress(e)} disabled={disabled}/>:
-          <ReactTagify
-            colors={"#FFFFFF"}
-            tagClicked={(tag) =>
-              navigate(`/hashtag/${tag.slice(1, tag.length )}`)
-            }
-          >
-            <h3>{caption}</h3>
-          </ReactTagify>}
+            <Coments
+              showComents={showComents}
+              setShowComents={setShowComents}
+            />
+            <BiRepost style={style} />
+            <LikeText>{card.numberOfShares} re-posts</LikeText>
+          </UserInfo>
 
-          <MetaData>
-            <a href={card.url} target="_blank" rel="noreferrer">
-              <div>
-                <h3>{card.title}</h3>
-                <h5 >{card.description}</h5>
-                <h4>{card.url}</h4>
-              </div>
-            </a>
-            <img src={card.image} alt="link"></img>
-          </MetaData>
-        </UrlInfo>
-      </CardContainer>
-      </>);
+          <UrlInfo>
+            <CardHeader>
+              <h2
+                onClick={() => {
+                  navigate(`/user/${card.userId}`);
+                }}
+              >
+                {card.username}
+              </h2>
+              <ul>
+                <DeleteModal postId={card.id} />
+                <BsFillPencilFill onClick={postEdit} />
+              </ul>
+            </CardHeader>
+            {editPost ? (
+              <Input
+                ref={captionRef}
+                type={"text"}
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                onKeyDown={(e) => keyPress(e)}
+                disabled={disabled}
+              />
+            ) : (
+              <ReactTagify
+                colors={"#FFFFFF"}
+                tagClicked={(tag) =>
+                  navigate(`/hashtag/${tag.slice(1, tag.length)}`)
+                }
+              >
+                <h3>{caption}</h3>
+              </ReactTagify>
+            )}
+
+            <MetaData>
+              <a href={card.url} target="_blank" rel="noreferrer">
+                <div>
+                  <h3>{card.title}</h3>
+                  <h5>{card.description}</h5>
+                  <h4>{card.url}</h4>
+                </div>
+              </a>
+              <img src={card.image} alt="link"></img>
+            </MetaData>
+          </UrlInfo>
+        </CardContainer>
+        <ComentsArea showComents={showComents} card={card} />
+      </>
+    );
   } else {
-    return (<>
-    { card.isRepost &&
+    return (
+      <>
+        {card.isRepost && (
           <RepostContainer>
-            <BiRepost style={style2}/>
+            <BiRepost style={style2} />
             <p>Reposted by {userRepost}</p>
           </RepostContainer>
-          
-        }
-      <CardContainer>
-        <UserInfo color_icon={liked}>
-          <img src={card.pictureUrl} alt="profile"></img>
-          <ion-icon name={liked? "heart-sharp": "heart-outline"} onClick={() => liked? dislike(card.id): like(card.id)}></ion-icon>
-          <Popup
-            trigger={<LikeText onMouseEnter={getLikes} > {numberOfLikes} likes
-            </LikeText>}
-            position="bottom center"
-          >
-          {message}
-          </Popup>
-          <RepostModal postId={card.id} />
-          <LikeText>{card.numberOfShares} re-posts</LikeText>
-        </UserInfo>
+        )}
+        <CardContainer>
+          <UserInfo color_icon={liked}>
+            <img src={card.pictureUrl} alt="profile"></img>
+            <ion-icon
+              name={liked ? "heart-sharp" : "heart-outline"}
+              onClick={() => (liked ? dislike(card.id) : like(card.id))}
+            ></ion-icon>
+            <Popup
+              trigger={
+                <LikeText onMouseEnter={getLikes}>
+                  {" "}
+                  {numberOfLikes} likes
+                </LikeText>
+              }
+              position="bottom center"
+            >
+              {message}
+            </Popup>
 
-        <UrlInfo>
-          <h2  onClick={()=>{navigate(`/user/${card.userId}`)}}>{card.username}</h2>
-          <ReactTagify
-            colors={"#FFFFFF"}
-            tagClicked={(tag) =>
-              navigate(`/hashtag/${tag.slice(1, tag.length )}`)
-            }
-          >
-            <h3>{card.caption}</h3>
-          </ReactTagify>
+            <Coments
+              showComents={showComents}
+              setShowComents={setShowComents}
+            />
+            <RepostModal postId={card.id} />
+            <LikeText>{card.numberOfShares} re-posts</LikeText>
+          </UserInfo>
 
-          <MetaData>
-            <a href={card.url} target="_blank" rel="noreferrer">
-              <div>
-                <h3>{card.title}</h3>
-                <h5>{card.description}</h5>
-                <h4>{card.url}</h4>
-              </div>
-            </a>
-            <img src={card.image} alt="link"></img>
-          </MetaData>
-        </UrlInfo>
-      </CardContainer>
-    </>);
+          <UrlInfo>
+            <h2
+              onClick={() => {
+                navigate(`/user/${card.userId}`);
+              }}
+            >
+              {card.username}
+            </h2>
+            <ReactTagify
+              colors={"#FFFFFF"}
+              tagClicked={(tag) =>
+                navigate(`/hashtag/${tag.slice(1, tag.length)}`)
+              }
+            >
+              <h3>{card.caption}</h3>
+            </ReactTagify>
+
+            <MetaData>
+              <a href={card.url} target="_blank" rel="noreferrer">
+                <div>
+                  <h3>{card.title}</h3>
+                  <h5>{card.description}</h5>
+                  <h4>{card.url}</h4>
+                </div>
+              </a>
+              <img src={card.image} alt="link"></img>
+            </MetaData>
+          </UrlInfo>
+        </CardContainer>
+      </>
+    );
   }
-
 }
 
 const CardContainer = styled.div`
@@ -260,33 +303,31 @@ const CardContainer = styled.div`
   padding: 16px 22px 18px 9px;
   justify-content: space-between;
 
-  @media(max-width: 900px){
-        width: 60%;
-    }
-  
+  @media (max-width: 900px) {
+    width: 60%;
+  }
 
   @media (max-width: 800px) {
-        width: 100%;
-        height: 232px;
-        border-radius: 0px;
-        justify-content: center;
+    width: 100%;
+    height: 232px;
+    border-radius: 0px;
+    justify-content: center;
 
-        & img {
-            width: 0px;
-            height: 0px;
-        }
+    & img {
+      width: 0px;
+      height: 0px;
     }
-
+  }
 `;
 
 const Input = styled.input`
-      background: #FFFFFF;
-      border-radius: 7px;
-      width:84%;
-      text-align: left;
-      min-height: 30px;
-      border-width:0px;
-`
+  background: #ffffff;
+  border-radius: 7px;
+  width: 84%;
+  text-align: left;
+  min-height: 30px;
+  border-width: 0px;
+`;
 
 const UserInfo = styled.div`
   width: 12%;
@@ -303,7 +344,7 @@ const UserInfo = styled.div`
 
   & ion-icon {
     font-size: 26px;
-    color:  ${props => props.color_icon? "#c91313": "#FFFFFF"};;
+    color: ${(props) => (props.color_icon ? "#c91313" : "#FFFFFF")};
     margin-top: 12px;
   }
 `;
@@ -328,8 +369,8 @@ const UrlInfo = styled.div`
     color: #b7b7b7;
   }
   @media (max-width: 800px) {
-        height: 115px;
-    }
+    height: 115px;
+  }
 `;
 
 const MetaData = styled.div`
@@ -370,24 +411,21 @@ const MetaData = styled.div`
       line-height: 13px;
       color: #cecece;
     }
-    & 
-      img {
-        width: 30%;
-        height: 100%;
-        border-radius: 11px;
-        object-fit: cover;
-       
+    & img {
+      width: 30%;
+      height: 100%;
+      border-radius: 11px;
+      object-fit: cover;
     }
 
     .dissable {
-      display:none;
+      display: none;
     }
   }
   @media (max-width: 800px) {
-        width: 100%;
-        height: 115px;
+    width: 100%;
+    height: 115px;
   }
-    
 `;
 
 const CardHeader = styled.div`
@@ -401,40 +439,38 @@ const CardHeader = styled.div`
     color: #fff;
   }
 
-  >h2{
+  > h2 {
     cursor: pointer;
   }
 `;
 
 const LikeText = styled.div`
-    font-family: 'Lato';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 11px;
-    line-height: 13px;
-    text-align: center;
-    color: #FFFFFF;
-    margin: 4px;
-    `
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  color: #ffffff;
+  margin: 4px;
+`;
 
 const RepostContainer = styled.div`
   box-sizing: border-box;
   width: 611px;
   height: 35px;
-  background: #1E1E1E;
+  background: #1e1e1e;
   border-radius: 16px;
   padding: 13px;
   display: flex;
   align-items: center;
-  & p{
-    font-family: 'Lato';
+  & p {
+    font-family: "Lato";
     margin-left: 7px;
     font-style: normal;
     font-weight: 400;
     font-size: 11px;
     line-height: 13px;
-    color: #FFFFFF;
-
+    color: #ffffff;
   }
-
-`
+`;

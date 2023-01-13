@@ -28,18 +28,19 @@ export default function UserPage() {
             setName(res.data.posts[0].username);
             setLoading(true);
             const { posts, hashtags } = res.data;
-            if (posts.length === 0) {
-                setHasMore(false);
+            if (posts.length !== 0) {
+                setCards([...cards, ...posts]);
+                setHashtags(hashtags);
+                setPage(page+1);
                 setLoading(false);
                 return;
             }
-            setCards(prevCards => {
-                return [...new Set([...prevCards, ...posts])]
-              });
-            setHashtags(hashtags);
-            setPage(page + 1);
-            setLoading(false);
-            return;
+            else{
+                setHasMore(false);
+                setLoading(false);
+                setPage(0);
+                return;
+            }
         })
         .catch((err) => {
             console.log(err);

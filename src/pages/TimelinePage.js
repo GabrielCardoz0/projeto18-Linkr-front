@@ -9,6 +9,7 @@ import axios from "axios";
 import { useAuth } from "../providers/auth";
 import { baseURL } from "../constants/urls"
 import InfiniteScroll from 'react-infinite-scroller';
+import { BsChevronDoubleLeft } from "react-icons/bs"
 
 
 
@@ -31,17 +32,19 @@ export default function TimelinePage() {
         .then((res) => {
             setLoading(true);
             const { posts, hashtags } = res.data;
-            if (posts.length === 0) {
-                setHasMore(false);
+            if (posts.length !== 0) {
+                setCards([...cards, ...posts]);
+                setHashtags(hashtags);
+                setPage(page+1);
                 setLoading(false);
                 return;
             }
-            setCards(prevCards => {
-                return [...new Set([...prevCards, ...posts])]
-              });
-            setHashtags(hashtags);
-            setPage(page + 1);
-            setLoading(false);
+            else{
+                setHasMore(false);
+                setLoading(false);
+                setPage(0);
+            }
+            
 
             if(followStatus==="no-post"){
                 setFollowMessage("No posts found from your friends")
@@ -64,15 +67,14 @@ export default function TimelinePage() {
     return(
         <>
         <Navbar/>
-        <TimelineContainer>
+        <TimelineContainer >
         <Title>timeline</Title>
         <FillCard/>
         <InfiniteScroll
-         pageStart={0}
-         loadMore={loadFunc}
-         dataLength={1}
-         hasMore={hasMore}
-         loader={<Load>{'loading...'}</Load>}
+        pageStart={0}
+        loadMore={loadFunc}
+        hasMore={hasMore}
+        loader={<Load>{'loading...'}</Load>}
         >
         {cards.map((card, i) => {
             return(

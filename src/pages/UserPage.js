@@ -183,6 +183,16 @@ const UserContainer = styled.div`
     padding-bottom: 20px;
     margin-bottom: 20px;
 
+    @media(max-width: 1200px){
+        margin-left: 5%;
+    }
+    @media(max-width: 1000px){
+        margin-left: 2%;
+    }
+    @media (max-width: 800px) {
+        margin-left: 0;
+    }
+
     .unfollowButton{
         background-color:#FFFFFF;
         color:#1877F2;

@@ -4,7 +4,7 @@ import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
 import { titleFont } from "../constants/fonts"
 import Navbar from "../components/Navbar"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../providers/auth";
 import { baseURL } from "../constants/urls"
@@ -81,6 +81,8 @@ export default function TimelinePage() {
       
         })
     } 
+
+    useEffect(loadFunc, [])
 
     function loadFunc() {
         getReposts()

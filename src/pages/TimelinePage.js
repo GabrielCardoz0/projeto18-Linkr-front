@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar"
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../providers/auth";
-import { baseURL } from "../constants/urls"
+import { API_URL } from "../constants/urls"
 import InfiniteScroll from 'react-infinite-scroller';
 import { BsChevronDoubleLeft } from "react-icons/bs"
 
@@ -25,7 +25,7 @@ export default function TimelinePage() {
 
 
     function loadFunc() {
-        axios.get(`${baseURL}/timeline?page=${page}`,{
+        axios.get(`${API_URL}/timeline?page=${page}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
 
@@ -81,6 +81,7 @@ export default function TimelinePage() {
                 <PublishedCards key={i} card={card}/>
             )
         })}
+        <Message><h5>{followMessage}</h5></Message>
         </InfiniteScroll>
         <TrendingCards hashtags={hashtags}/>
         </TimelineContainer>

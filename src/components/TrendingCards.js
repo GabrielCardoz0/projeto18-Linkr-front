@@ -29,7 +29,7 @@ const Container = styled.div`
     width: 301px;
     height: 430px;
     position: fixed;
-    top: 272px;
+    top: 260px;
     left: 66.5%;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     h3{

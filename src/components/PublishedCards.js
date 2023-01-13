@@ -150,7 +150,7 @@ export default function PublishedCards({ card }) {
 
         <UrlInfo>
           <CardHeader>
-            <h2>{card.username}</h2>
+            <h2 onClick={()=>{navigate(`/user/${card.id}`)}}>{card.username}</h2>
             <ul>
               <DeleteModal postId={card.id} />
               <BsFillPencilFill onClick={postEdit}/>
@@ -367,6 +367,10 @@ const CardHeader = styled.div`
     margin: 0 10px;
     font-size: 20px;
     color: #fff;
+  }
+
+  >h2{
+    cursor: pointer;
   }
 `;
 

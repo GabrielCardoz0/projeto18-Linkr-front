@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import PublishedCards from "../components/PublishedCards"
 import TrendingCards from "../components/TrendingCards"
-import { useEffect, useState, useContext } from "react";
+import {  useState, useContext } from "react";
 import axios from "axios";
 import { API_URL } from "../constants/urls";
 import { titleFont } from "../constants/fonts"
@@ -67,7 +67,7 @@ export default function UserPage() {
         })
     };
     function loadFunc() {
-        axios.get(`${baseURL}/user/${id}?page=${page}`,{
+        axios.get(`${API_URL}/user/${id}?page=${page}`,{
             headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -78,7 +78,6 @@ export default function UserPage() {
             setLoading(false);
             setFollowing(res.data.userFollow);
             setLoading(true);
-            return;
             const { posts, hashtags } = res.data;
             if (posts.length !== 0) {
                 setCards([...cards, ...posts]);
@@ -152,7 +151,9 @@ const UserContainer = styled.div`
         background-color:#1877F2;
         color:#FFFFFF;
     }
-
+    @media (max-width: 800px) {
+        margin-left: 0;
+    }
     
 `
 
@@ -185,4 +186,9 @@ const Button = styled.button`
         top:150px;
         left:80%;
         cursor: pointer;
+
+        @media (max-width: 800px) {
+        left: 0;
+        right:20px;
+    }
 `
